@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 
 export default function Header() {
     const pathname = usePathname()
-    const connected = false
     return (
         <header className={pathname === '/' ? 'grid grid-cols-2 items-center my-5 xl:mx-40 2xl:mx-60 absolute top-0 left-0 right-0 z-50' : 'grid grid-cols-2 items-center xl:mx-10 2xl:mx-40 border-b-2 p-3 border-[#e879f9]'}>
             <nav className='flex items-center gap-10'>

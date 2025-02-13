@@ -1,7 +1,5 @@
 import React from 'react'
 import { BackgroundGradientAnimation } from './ui/background-gradient-animation'
-import { Button } from './ui/button'
-import Link from 'next/link'
 import Image from 'next/image'
 import { Circle } from 'lucide-react'
 

@@ -1,7 +1,5 @@
 import Image from 'next/image'
 import React from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Twitter } from 'lucide-react'
 
 
 export default function CardAgent() {
