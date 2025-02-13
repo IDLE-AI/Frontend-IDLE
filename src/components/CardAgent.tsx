@@ -6,7 +6,7 @@ import { Twitter } from 'lucide-react'
 
 export default function CardAgent() {
     return (
-        <div className='border p-3 space-y-5 backdrop-blur-sm hover:bg-muted/50 hover:border-primary transition-all duration-300 transform hover:-translate-y-1'>
+        <div className='border p-3 space-y-5 backdrop-blur-sm hover:bg-muted/50 hover:border-[#e879f9] transition-all duration-300 transform hover:-translate-y-1'>
             <div className='grid gap-5'>
                 <div className='flex items-center gap-5 col-span-2'>
                     {/* <Avatar className='w-12 h-12'>

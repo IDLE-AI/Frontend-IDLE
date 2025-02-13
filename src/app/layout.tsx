@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
   display: "swap",
 })
 
@@ -22,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${manrope.className} antialiased`}
+        className={`${inter.className} antialiased`}
       >
         <Header />
         {children}
