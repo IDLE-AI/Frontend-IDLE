@@ -6,7 +6,6 @@ const TokenChart: React.FC = () => {
             <iframe
                 src="https://s.tradingview.com/embed-widget/advanced-chart/?symbol=BINANCE%3ABTCUSDT&interval=D&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC"
                 frameBorder="0"
-                // allowTransparency={true}
                 scrolling="no"
                 style={{
                     width: '100%',
