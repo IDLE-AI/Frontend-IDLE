@@ -2,6 +2,8 @@ import Hero from '@/components/Hero'
 import Image from 'next/image'
 import React from 'react'
 import { ChartCandlestick, SendToBack, UserPlus } from 'lucide-react'
+import { Roadmap } from '@/components/Roadmap'
+import { ElizaParallax } from '@/components/ElizaParallax'
 export default function page() {
   return (
     <main className='space-y-40'>
@@ -37,38 +39,37 @@ export default function page() {
       </section>
 
       <section className='space-y-5 xl:mx-40 2xl:mx-60 grid grid-cols-2 gap-10 items-center'>
-        <div className='space-y-2'>
+        <div className='space-y-2 '>
           <p className='text-[#e879f9]'>BUILD. DEPLOY. TRADE. INTERACT.</p>
           <h1 className='text-5xl font-bold'>The Home of AI AGENTS</h1>
         </div>
 
         <div className='grid grid-cols-2 gap-10'>
-          <div>
+          <div className='space-y-2 hover:bg-primary/10 transition-all duration-300 ease-in-out p-3'>
             <UserPlus className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>Build</h1>
             <p className='text-muted-foreground'>Build your own agents with the IDLE AI on ElizaOS Framework</p>
           </div>
-          <div>
+          <div className='space-y-2 hover:bg-primary/10 transition-all duration-300 ease-in-out p-3'>
             <SendToBack className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>DEPLOY</h1>
             <p className='text-muted-foreground'>Deploy your personal AI Agents</p>
           </div>
-          <div>
+          <div className='space-y-2 hover:bg-primary/10 transition-all duration-300 ease-in-out p-3'>
             <ChartCandlestick className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>TRADE</h1>
             <p className='text-muted-foreground'>Everyone can trade your personal AI agents.</p>
           </div>
-          <div>
+          <div className='space-y-2 hover:bg-primary/10 transition-all duration-300 ease-in-out p-3'>
             <UserPlus className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>Interact</h1>
             <p className='text-muted-foreground'>Everyone can interact with your personal AI agents.</p>
           </div>
         </div>
       </section>
-
+      {/* 
       <section className='grid grid-cols-2 items-center gap-10 xl:mx-40 2xl:mx-60'>
         <div>
-          {/* <p className='text-4xl font-bold'>ELIZA OS FRAMEWORK</p> */}
           <Image src='/images/eliza.png' alt='idle' width={600} height={600} priority={true} className='rounded border-2 border-[#e879f9] w-full' />
         </div>
         <div className='text-end'>
@@ -76,8 +77,9 @@ export default function page() {
           <h1 className='text-5xl font-bold'>AI Acceleration Tools</h1>
           <p className='text-2xl text-muted-foreground'>All-in-One Development Suite for Building, Deploying, and Managing AI Agents on Manta Network.</p>
         </div>
-      </section >
-
+      </section > */}
+      <ElizaParallax />
+      <Roadmap />
     </main >
   )
 }

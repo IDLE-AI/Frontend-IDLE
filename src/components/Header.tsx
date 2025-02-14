@@ -3,13 +3,15 @@ import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-
+import Image from 'next/image'
 export default function Header() {
     const pathname = usePathname()
     return (
-        <header className={pathname === '/' ? 'grid grid-cols-2 items-center my-5 xl:mx-40 2xl:mx-60 absolute top-0 left-0 right-0 z-50' : 'grid grid-cols-2 items-center xl:mx-10 2xl:mx-40 border-b-2 p-3 border-[#e879f9]'}>
+        <header className={pathname === '/' ? 'grid grid-cols-2 items-center my-5 xl:mx-40 2xl:mx-60 absolute top-0 left-0 right-0 z-50' : 'grid grid-cols-2 items-center xl:mx-10 2xl:mx-40 border-b-2 py-7 border-[#e879f9]'}>
             <nav className='flex items-center gap-10'>
-                <Link href='/' className='text-2xl font-bold'>IDLE AI </Link>
+                <Link href='/' className='text-2xl font-bold'>
+                    <Image src='/images/idle-logo-primary.png' alt='logo' width={100} height={100} />
+                </Link>
                 <nav className='space-x-5'>
                     <Link
                         href='/agents'
@@ -18,8 +20,8 @@ export default function Header() {
                         AGENTS
                     </Link>
                     <Link
-                        href='/create'
-                        className={`${pathname === '/create' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
+                        href='/agents/create'
+                        className={`${pathname === '/agents/create' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
                     >
                         CREATE
                     </Link>
@@ -37,10 +39,17 @@ export default function Header() {
                     </Link>
                 </nav>
             </nav>
-            <nav className='justify-self-end'>
-                <Button className='rounded font-bold' variant='outline' size={'lg'}>
+            <nav className={`${pathname === '/' ? 'justify-self-end' : 'hidden'}`}>
+                <Button className='rounded font-bold' variant='default' size={'lg'}>
                     <Link href='/agents'>
                         GET STARTED
+                    </Link>
+                </Button>
+            </nav>
+            <nav className={`${pathname === '/' ? 'hidden' : 'justify-self-end'}`}>
+                <Button className='rounded font-bold' variant='default'>
+                    <Link href='/agents'>
+                        CONNECT WALLET
                     </Link>
                 </Button>
             </nav>

@@ -29,8 +29,8 @@ export default function Transactions() {
                     <TableCell className="font-medium">0xB53F9688e99D34EF93392F88fD01d6E5651d8CfA</TableCell>
                     <TableCell>Buy</TableCell>
                     <TableCell>0.000100</TableCell>
-                    <TableCell>NAMA TOKEN</TableCell>
-                    <TableCell>2024-01-01</TableCell>
+                    <TableCell>150.2312</TableCell>
+                    <TableCell>11 hours ago</TableCell>
                     <TableCell>0x1234567890123456789012345678901234567890</TableCell>
                 </TableRow>
             </TableBody>

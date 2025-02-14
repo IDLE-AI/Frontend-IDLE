@@ -7,7 +7,7 @@ export default function Hero() {
     return (
         <BackgroundGradientAnimation>
             <div className='absolute z-50 inset-0 flex flex-col gap-5 items-center justify-center text-white font-bold px-4 pointer-events-none text-3xl text-center md:text-4xl lg:text-7xl'>
-                <div className='flex items-center gap-2 bg-primary/90 rounded text-primary-foreground p-2 px-5 shadow-inner shadow-primary/20'>
+                <div className='flex items-center gap-2 bg-primary/90 rounded-full text-primary-foreground p-2 px-5 shadow-inner shadow-primary/20'>
                     <Image
                         src={'/images/manta.png'}
                         alt='manta-network-logo_idle-ai'
