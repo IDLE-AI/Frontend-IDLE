@@ -1,5 +1,4 @@
 import Hero from '@/components/Hero'
-import Image from 'next/image'
 import React from 'react'
 import { ChartCandlestick, SendToBack, UserPlus } from 'lucide-react'
 import { Roadmap } from '@/components/Roadmap'
