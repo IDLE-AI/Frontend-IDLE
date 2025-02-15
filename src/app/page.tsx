@@ -3,6 +3,7 @@ import React from 'react'
 import { ChartCandlestick, SendToBack, UserPlus } from 'lucide-react'
 import { Roadmap } from '@/components/Roadmap'
 import { ElizaParallax } from '@/components/ElizaParallax'
+import { HookTypewriter } from '@/components/HookTypewriter'
 export default function page() {
   return (
     <main className='space-y-40'>
@@ -36,6 +37,10 @@ export default function page() {
           </div>
         </div>
       </section>
+      {/* 
+      <section className='flex flex-col items-center justify-center'>
+        <h1 className='text-7xl italic font-bold text-[#e879f9]'>TOKEN LAUNCH AVAILABLE SOON</h1>
+      </section> */}
 
       <section className='space-y-5 xl:mx-40 2xl:mx-60 grid grid-cols-2 gap-10 items-center'>
         <div className='space-y-2 '>
@@ -79,6 +84,7 @@ export default function page() {
       </section > */}
       <ElizaParallax />
       <Roadmap />
+      {/* <HookTypewriter /> */}
     </main >
   )
 }

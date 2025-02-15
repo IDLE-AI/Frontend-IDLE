@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Script from "next/script";
-
+import Footer from "@/components/Footer";
+import { RainbowkitConfig } from "@/config/RainbowkitConfig";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -24,8 +25,11 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        <Header />
-        {children}
+        <RainbowkitConfig>
+          <Header />
+          {children}
+          <Footer />
+        </RainbowkitConfig>
       </body>
       <Script src="https://s3.tradingview.com/tv.js"></Script>
     </html>

@@ -10,24 +10,26 @@ export default function page() {
             <form className='space-y-5'>
                 <section className='border p-4 rounded space-y-5'>
                     <h1 className='text-2xl font-bold uppercase text-[#e879f9]'>Agent Details</h1>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Agent Name</Label>
                         <Input
                             type="text"
                             placeholder='example: "The Crypto Agent"'
+                            className='rounded duration-200 ease-in-out'
                         />
                     </div>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Agent Ticker</Label>
                         <Input
                             type="text"
                             placeholder='example: "CRYPTO"'
+                            className='rounded duration-200 ease-in-out'
                         />
                     </div>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Agent Description</Label>
                         <Textarea
-                            className='resize-none'
+                            className='resize-none rounded duration-200 ease-in-out'
                             rows={5}
                             placeholder='example: "The Crypto Agent is a bot that tweets about crypto"'
                         />
@@ -36,75 +38,79 @@ export default function page() {
 
                 <section className='border p-4 rounded space-y-5'>
                     <h1 className='text-2xl font-bold uppercase text-[#e879f9]'>Agent Socials</h1>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>X or Twitter Link (optional)</Label>
                         <Input
                             type="text"
                             placeholder='example: "https://x.com/TheCryptoAgent"'
+                            className='rounded duration-200 ease-in-out'
                         />
                     </div>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Telegram Link (optional)</Label>
                         <Input
                             type="text"
                             placeholder='example: "https://t.me/TheCryptoAgent"'
+                            className='rounded duration-200 ease-in-out'
                         />
                     </div>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Website Link (optional)</Label>
                         <Input
                             type="text"
                             placeholder='example: "https://thecryptoa.com"'
+                            className='rounded duration-200 ease-in-out'
                         />
                     </div>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Discord Link (optional)</Label>
                         <Input
                             type="text"
                             placeholder='example: "https://discord.com/invite/TheCryptoAgent"'
+                            className='rounded duration-200 ease-in-out'
                         />
                     </div>
                 </section>
 
                 <section className='border p-4 rounded space-y-5'>
                     <h1 className='text-2xl font-bold uppercase text-[#e879f9]'>Agent Settings</h1>
-                    <div>
+                    {/* <div>
                         <Label>Agent Age Group</Label>
                         <Input
                             type="text"
                             placeholder='example: "Teen, Adult, etc."'
                         />
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                         <Label>Agent Answer Style</Label>
                         <Input
                             type="text"
                             placeholder='example: "Casual, Formal, Sarcasm, Manipulation, Jokes, Loves the feeling, etc."'
                         />
-                    </div>
-                    <div>
+                    </div> */}
+                    <div className='space-y-2'>
                         <Label>Agent Behavior</Label>
                         <Textarea
                             placeholder='example: "Always talks like a boss. drops a slang and crypto buzzwords nonstop. acts like a gen z teenager. act like a 20 year old girl. act like a 40 year old man."'
-                            className='resize-none'
+                            className='resize-none rounded duration-200 ease-in-out'
                             rows={5}
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <Label>Agent Goals</Label>
                         <Input
                             type='text'
                             placeholder='example: "Sell a product. Get more followers. Get more likes. Get more comments. Get more views. Get more subscribers. etc."'
                         />
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                         <Label>Agent Missions</Label>
                         <Input
                             type='text'
                             placeholder='example: "Promote crypto projects. Educate about blockchain. Share market insights. Build community engagement. Create viral content. Drive token adoption. etc."'
                         />
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                         <Label>Agent Likes</Label>
                         <Input
                             type='text'
@@ -117,7 +123,7 @@ export default function page() {
                             type='text'
                             placeholder='example: "Spam, Scams, Hacks, etc."'
                         />
-                    </div>
+                    </div> */}
                 </section>
                 <Button type="submit">Create Agent</Button>
             </form>

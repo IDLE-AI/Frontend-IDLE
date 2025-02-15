@@ -1,148 +1,170 @@
-import Image from "next/image";
 import React from "react";
 import { Timeline } from "@/components/ui/timeline";
 
 export function Roadmap() {
     const data = [
         {
-            title: "2024",
+            title: "Q1",
             content: (
-                <div>
-                    <p className="text-xl font-normal mb-8">
-                        Built and launched Aceternity UI and Aceternity UI Pro from scratch
-                    </p>
-                    <div className="grid grid-cols-2 gap-4">
-                        <Image
-                            src="https://assets.aceternity.com/templates/startup-1.webp"
-                            alt="startup template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/templates/startup-2.webp"
-                            alt="startup template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/templates/startup-3.webp"
-                            alt="startup template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/templates/startup-4.webp"
-                            alt="startup template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
+                <section className="space-y-5">
+                    <h1 className="text-4xl font-bold uppercase">Pre-Launch Phase</h1>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Team & Infrastructure Development
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Design and Build technical architecture (smart contracts, AI Agent, Interface, etc).</li>
+                            <li>Create a whitepaper detailing tokenomics, roadmap, and use cases.</li>
+
+                        </ul>
                     </div>
-                </div>
+
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Initial Community Building
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Launch Telegram Group & Twitter Account.</li>
+                            <li>Implement an "Early Adopter" program for users joining the whitelist for the token sale.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            MVP Prototype Development
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Develop a basic version of the MVP for people can Build, Deploy, Trade, and Interact with AI Agents.</li>
+                            <li>Release an interactive demo on the website to showcase technical capabilities.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Initial Fundraising
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Raise funds through a private sale to cover initial development costs.</li>
+                            <li>Target Minimum $500,000 (depending on development and marketing costs).</li>
+                        </ul>
+                    </div>
+                </section>
             ),
         },
         {
-            title: "Early 2023",
+            title: "Q2",
             content: (
-                <div>
-                    <p className="text-xl font-normal mb-8">
-                        IDLE AI is a protocol for building, deploying, and managing autonomous AI agents on Manta Network.
-                    </p>
-                    <p className="text-xl font-normal mb-8">
-                        Lorem ipsum is for people who are too lazy to write copy. But we are
-                        not. Here are some more example of beautiful designs I built.
-                    </p>
-                    <div className="grid grid-cols-2 gap-4">
-                        <Image
-                            src="https://assets.aceternity.com/pro/hero-sections.png"
-                            alt="hero template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/features-section.png"
-                            alt="feature template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/pro/bento-grids.png"
-                            alt="bento template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/cards.png"
-                            alt="cards template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
+                <section className="space-y-5">
+                    <h1 className="text-4xl font-bold uppercase">Token Launch & DEX Listing</h1>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Launch Token on Website
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Host a Public Sale with a fair launch mechanism</li>
+                            <li>Implement lock-up periods for large investors to prevent dumping.</li>
+
+                        </ul>
                     </div>
-                </div>
+
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            List on DEX
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>List on a reputable DEX with a strong community.</li>
+                            <li>Conduct a security audit of smart contracts by a trusted company </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Community Growth
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Launch a "Referral Reward" program to increase Telegram/Twitter members.</li>
+                            <li>Collaborate with Web3 influencers to boost visibility.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Initial Fundraising
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Raise funds through a private sale to cover initial development costs.</li>
+                            <li>Target Minimum $500,000 (depending on development and marketing costs).</li>
+                        </ul>
+                    </div>
+                </section>
             ),
         },
         {
-            title: "Changelog",
+            title: "Q3",
             content: (
-                <div>
-                    <p className="text-xl font-normal mb-4">
-                        Deployed 5 new components on Aceternity today
-                    </p>
-                    <div className="mb-8">
-                        <div className="flex gap-2 items-center text-xl">
-                            ✅ Card grid component
-                        </div>
-                        <div className="flex gap-2 items-center text-xl">
-                            ✅ Startup template Aceternity
-                        </div>
-                        <div className="flex gap-2 items-center text-xl">
-                            ✅ Random file upload lol
-                        </div>
-                        <div className="flex gap-2 items-center text-xl">
-                            ✅ Himesh Reshammiya Music CD
-                        </div>
-                        <div className="flex gap-2 items-center text-xl">
-                            ✅ Salman Bhai Fan Club registrations open
-                        </div>
+                <section className="space-y-5">
+                    <h1 className="text-4xl font-bold uppercase">Core Feature Development</h1>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Release Feature
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Enable users to build, deploy, and interact with AI Agents in a more intuitive and user-friendly interface.</li>
+                            <li>Introduce a "Studio Mode" for advanced users to customize AI Agents with advanced settings.</li>
+                            <li>Integrate an NFT Marketplace to simplify buying/selling user-generated content.</li>
+                        </ul>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <Image
-                            src="https://assets.aceternity.com/pro/hero-sections.png"
-                            alt="hero template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/features-section.png"
-                            alt="feature template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/pro/bento-grids.png"
-                            alt="bento template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
-                        <Image
-                            src="https://assets.aceternity.com/cards.png"
-                            alt="cards template"
-                            width={500}
-                            height={500}
-                            className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
-                        />
+
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Integrate with Other AI Infrastructures
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Integrate with other AI infrastructures to provide a more comprehensive AI experience. (Virtual Protocol, etc)</li>
+                            <li>Develop a "Multi-Agent" system to allow users to create and manage multiple AI Agents.</li>
+                        </ul>
                     </div>
-                </div>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Ecosystem Expansion
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Launch a Bug Bounty program to enhance system security.</li>
+                            <li>Create a "Developer Portal" to provide resources for building on the platform.</li>
+                        </ul>
+                    </div>
+                </section>
+            ),
+        },
+        {
+            title: "Q4",
+            content: (
+                <section className="space-y-5">
+                    <h1 className="text-4xl font-bold uppercase">Ecosystem Expansion</h1>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            List on CEX
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>List on a reputable CEX to increase visibility and liquidity like Binance, Coinbase, or OKX.</li>
+
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Collaborate with Other Web3 Projects
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Integrate with other AI infrastructures to provide a more comprehensive AI experience. (Virtual Protocol, etc)</li>
+                            <li>Run Cross-Promotion campaigns with NFT or GameFi projects.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-medium">
+                            Announce Next Roadmap
+                        </h1>
+                        <ul className="list-disc list-inside text-muted-foreground">
+                            <li>Examples: Mobile app expansion, VR/AR integration, or advanced AI Agent features.</li>
+                        </ul>
+                    </div>
+                </section>
             ),
         },
     ];

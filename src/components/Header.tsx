@@ -4,6 +4,7 @@ import { Button } from './ui/button'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
+import WalletButton from './WalletButton'
 export default function Header() {
     const pathname = usePathname()
     return (
@@ -14,23 +15,23 @@ export default function Header() {
                 </Link>
                 <nav className='space-x-5'>
                     <Link
-                        href='/agents'
-                        className={`${pathname === '/agents' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
-                    >
-                        AGENTS
-                    </Link>
-                    <Link
                         href='/agents/create'
                         className={`${pathname === '/agents/create' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
                     >
                         CREATE
                     </Link>
                     <Link
+                        href='/agents'
+                        className={`${pathname === '/agents' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
+                    >
+                        AGENTS
+                    </Link>
+                    {/* <Link
                         href='/staking'
                         className={`${pathname === '/staking' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
                     >
                         STAKING
-                    </Link>
+                    </Link> */}
                     <Link
                         href='/studio'
                         className={`${pathname === '/studio' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
@@ -47,11 +48,7 @@ export default function Header() {
                 </Button>
             </nav>
             <nav className={`${pathname === '/' ? 'hidden' : 'justify-self-end'}`}>
-                <Button className='rounded font-bold' variant='default'>
-                    <Link href='/agents'>
-                        CONNECT WALLET
-                    </Link>
-                </Button>
+                <WalletButton />
             </nav>
         </header>
     )
