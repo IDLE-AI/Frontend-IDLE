@@ -79,7 +79,7 @@ export function Roadmap() {
                             Community Growth
                         </h1>
                         <ul className="list-disc list-inside text-muted-foreground">
-                            <li>Launch a "Referral Reward" program to increase Telegram/Twitter members.</li>
+                            <li>Launch a &quot;Referral Reward&quot; program to increase Telegram/Twitter members.</li>
                             <li>Collaborate with Web3 influencers to boost visibility.</li>
                         </ul>
                     </div>
@@ -126,7 +126,7 @@ export function Roadmap() {
                         </h1>
                         <ul className="list-disc list-inside text-muted-foreground">
                             <li>Launch a Bug Bounty program to enhance system security.</li>
-                            <li>Create a "Developer Portal" to provide resources for building on the platform.</li>
+                            <li>Create a &quot;Developer Portal&quot; to provide resources for building on the platform.</li>
                         </ul>
                     </div>
                 </section>
