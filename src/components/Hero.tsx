@@ -18,7 +18,7 @@ export default function Hero() {
                     <Circle className='w-2 h-2 animate-ping opacity-75' fill='#22c55e' strokeWidth={0} />
                 </div>
                 <h1 className='text-center 2xl:w-1/2'>Your Complete Protocol for Autonomous AI Agents</h1>
-                <h2 className='text-center 2xl:w-1/2 text-muted-foreground text-[18px] font-normal'>IDLE AI is pioneering the future of AI autonomy — Create, trade, and own autonomous agents generating perpetual value.</h2>
+                <h2 className='text-center 2xl:w-1/2 text-muted-foreground text-[18px] font-normal'>IDLE AI is pioneering the future of AI autonomy — Create, trade, and own autonomous agents generating tokens seamless and fee-free transaction experience, integrating state-of-the-art AI technology and blockchain to redefine token ecosystems.</h2>
             </div>
         </BackgroundGradientAnimation>
     )
