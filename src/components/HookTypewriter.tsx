@@ -6,29 +6,30 @@ import { TypewriterEffectSmooth } from "./ui/typewriter-effect";
 export function HookTypewriter() {
     const words = [
         {
-            text: "START",
+            text: "COMING",
         },
         {
-            text: "BUILDING",
+            text: "SOON",
         },
         {
-            text: "YOUR",
+            text: "🚀",
         },
         {
-            text: "AI AGENTS",
+            text: "UNDER",
+        },
+        {
+            text: "DEVELOPMENT",
             className: "text-[#e879f9]",
         },
-        {
-            text: "TODAY.",
-        },
     ];
-    // Start building your AI agents today
+
     return (
-        <div className="flex flex-col items-center justify-center h-[40rem]">
+        <div className="flex flex-col items-center justify-center h-[40rem] gap-4">
             <TypewriterEffectSmooth words={words} />
-            <Button size={'lg'} className="rounded bg-[#e879f9]">
-                GETTING STARTED
-            </Button>
+            <p className="text-muted-foreground">Our AI AGENTS feature for <strong>STUDIO MODE</strong> is currently under development</p>
+            <div className="rounded-full bg-primary/50 cursor-not-allowed px-4 py-2">
+                AVAILABLE SOON
+            </div>
         </div>
     );
 }

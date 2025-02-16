@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`${inter.className} antialiased`}
       >
@@ -29,7 +29,7 @@ export default function RootLayout({
           <div className='flex items-center justify-center h-screen sm:hidden'>
             <p className='text-muted-foreground'>Please Open IDLE Website on Desktop</p>
           </div>
-          <div className='hidden 2xl:block'>
+          <div className='hidden xl:block'>
             <Header />
             {children}
             <Footer />

@@ -41,7 +41,7 @@ export default function Header() {
                 </nav>
             </nav>
             <nav className={`${pathname === '/' ? 'justify-self-end' : 'hidden'}`}>
-                <Button className='rounded font-bold' variant='default' size={'lg'}>
+                <Button className='rounded font-bold' variant='default' size={'lg'} asChild>
                     <Link href='/agents'>
                         GET STARTED
                     </Link>

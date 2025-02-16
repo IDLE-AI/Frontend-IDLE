@@ -12,8 +12,8 @@ const client = new QueryClient();
 
 const MantaPacificNetwork = {
     id: 169,
-    name: 'Manta Pacific Sepolia Testnet',
-    nativeCurrency: { name: 'Manta Pacific Network', symbol: 'ETH', decimals: 18 },
+    name: 'Manta Pacific L2 Rollup',
+    nativeCurrency: { name: 'Manta Pacific L2 Rollup', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
         default: { http: ['https://pacific-rpc.manta.network/http'] },
     },
