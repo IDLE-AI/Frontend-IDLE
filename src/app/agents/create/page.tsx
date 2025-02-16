@@ -8,8 +8,13 @@ import { useState } from 'react'
 import { useAccount, useWriteContract } from 'wagmi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
+import Image from 'next/image'
+import WalletButton from '@/components/WalletButton'
 
 interface AgentForm {
+    image: File | null;
+    imagePreview: string | null;
+    imageUrl: string | null;
     name: string;
     ticker: string;
     description: string;
@@ -21,11 +26,14 @@ interface AgentForm {
 }
 
 export default function CreateAgent() {
-    const { address } = useAccount()
+    const { address, isConnected } = useAccount()
     const { data: hash, isPending, writeContract, isSuccess: IsSuccessWriteContract } = useWriteContract()
     const [currentStep, setCurrentStep] = useState(0)
 
     const [formData, setFormData] = useState<AgentForm>({
+        image: null,
+        imagePreview: null,
+        imageUrl: null,
         name: '',
         ticker: '',
         description: '',
@@ -35,6 +43,60 @@ export default function CreateAgent() {
         discord: '',
         behavior: ''
     })
+
+    const [uploading, setUploading] = useState(false)
+
+    if (!isConnected) {
+        return (
+            <div className="h-screen flex flex-col items-center justify-center">
+                <h1 className="text-3xl font-bold mb-8 text-[#e879f9]">Connect Your Wallet</h1>
+                <p className="text-gray-400 mb-8">Please connect your wallet to create an agent</p>
+                <WalletButton />
+            </div>
+        )
+    }
+
+    const uploadFile = async (file: File) => {
+        try {
+            setUploading(true)
+            const data = new FormData()
+            data.set("file", file)
+            const uploadRequest = await fetch("/api/pinata", {
+                method: "POST",
+                body: data,
+            })
+            const ipfsUrl = await uploadRequest.json()
+
+            setFormData(prev => ({
+                ...prev,
+                imageUrl: ipfsUrl
+            }))
+
+            setUploading(false)
+            return ipfsUrl
+        } catch (e) {
+            console.error(e)
+            setUploading(false)
+            alert("Error uploading file")
+            return null
+        }
+    }
+
+    const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            // Show preview
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setFormData(prev => ({
+                    ...prev,
+                    image: file,
+                    imagePreview: reader.result as string
+                }))
+            }
+            reader.readAsDataURL(file)
+        }
+    }
 
     const steps = [
         { title: "Agent Details", component: "details" },
@@ -64,7 +126,8 @@ export default function CreateAgent() {
             formData.name.trim() !== '' &&
             formData.ticker.trim() !== '' &&
             formData.description.trim() !== '' &&
-            formData.behavior.trim() !== ''
+            formData.behavior.trim() !== '' &&
+            formData.image !== null
         )
     }
 
@@ -76,11 +139,22 @@ export default function CreateAgent() {
         }
 
         if (!validateRequiredFields()) {
-            alert('Please fill in all required fields (Name, Ticker, Description, and Behavior)')
+            alert('Please fill in all required fields (Image, Name, Ticker, Description, and Behavior)')
             return
         }
 
         try {
+            // Upload image first
+            let ipfsUrl = formData.imageUrl
+            if (formData.image && !ipfsUrl) {
+                ipfsUrl = await uploadFile(formData.image)
+                if (!ipfsUrl) {
+                    alert('Failed to upload image')
+                    return
+                }
+            }
+
+            // Then create token with image URL
             await writeContract({
                 abi: FACTORY_EXCHANGE_ABI,
                 address: FACTORY_EXCHANGE_ADDRESS,
@@ -119,6 +193,29 @@ export default function CreateAgent() {
                         className='space-y-5'
                     >
                         <h1 className='text-2xl font-bold uppercase text-[#e879f9]'>Agent Details</h1>
+                        <div className='space-y-2'>
+                            <Label htmlFor="image">Agent Image</Label>
+                            <div className='flex items-center gap-5'>
+                                {formData.imagePreview && (
+                                    <Image
+                                        src={formData.imagePreview}
+                                        alt="Preview"
+                                        width={100}
+                                        height={100}
+                                        className='rounded-lg object-cover aspect-square'
+                                    />
+                                )}
+                                <Input
+                                    id="image"
+                                    name="image"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleChangeImage}
+                                    className='rounded duration-200 ease-in-out'
+                                    required
+                                />
+                            </div>
+                        </div>
                         <div className='space-y-2'>
                             <Label htmlFor="name">Agent Name</Label>
                             <Input
@@ -324,6 +421,7 @@ export default function CreateAgent() {
                     </Button>
                 </div>
 
+                {uploading && <p className="text-center text-yellow-500">Uploading image...</p>}
                 {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
                 {IsSuccessWriteContract && <p className="text-center text-green-500">Agent Created Successfully!</p>}
                 {hash && (
