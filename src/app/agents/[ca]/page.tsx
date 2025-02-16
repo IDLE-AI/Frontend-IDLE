@@ -15,9 +15,9 @@ export default async function page({ params }: { params: Params }) {
     return (
         <main className='xl:m-5 space-y-5 xl:mx-10 2xl:mx-40'>
             <div className='grid grid-cols-3 gap-5'>
-                {/* <div className='border p-5 col-span-2'> */}
-                <TokenChart />
-                {/* </div> */}
+                <div className='border p-5 col-span-2'>
+                    <TokenChart />
+                </div>
                 <div className='space-y-5'>
                     <div className='border p-5 space-y-5'>
                         <div className='flex items-center gap-5'>

@@ -26,12 +26,19 @@ export default function RootLayout({
         className={`${inter.className} antialiased`}
       >
         <RainbowkitConfig>
-          <Header />
-          {children}
-          <Footer />
+          <div className='flex items-center justify-center h-screen sm:hidden'>
+            <p className='text-muted-foreground'>Please Open IDLE Website on Desktop</p>
+          </div>
+          <div className='hidden 2xl:block'>
+            <Header />
+            {children}
+            <Footer />
+          </div>
         </RainbowkitConfig>
       </body>
-      <Script src="https://s3.tradingview.com/tv.js"></Script>
+      <Script
+        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"
+      ></Script>
     </html>
   );
 }

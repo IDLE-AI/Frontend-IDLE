@@ -16,27 +16,27 @@ export default function Header() {
                 <nav className='space-x-5'>
                     <Link
                         href='/agents/create'
-                        className={`${pathname === '/agents/create' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
+                        className={`${pathname === '/agents/create' ? 'text-[#e879f9] font-bold' : 'text-muted-foreground hover:text-[#e879f9] duration-300 ease-in-out'}`}
                     >
                         CREATE
                     </Link>
                     <Link
                         href='/agents'
-                        className={`${pathname === '/agents' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
+                        className={`${pathname === '/agents' ? 'text-[#e879f9] font-bold' : 'text-muted-foreground hover:text-[#e879f9] duration-300 ease-in-out'}`}
                     >
                         AGENTS
                     </Link>
-                    {/* <Link
-                        href='/staking'
-                        className={`${pathname === '/staking' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
-                    >
-                        STAKING
-                    </Link> */}
                     <Link
                         href='/studio'
-                        className={`${pathname === '/studio' ? 'text-[#e879f9] font-bold' : 'text-primary hover:text-[#e879f9] duration-300 ease-in-out'}`}
+                        className={`${pathname === '/studio' ? 'text-[#e879f9] font-bold' : 'text-muted-foreground hover:text-[#e879f9] duration-300 ease-in-out'}`}
                     >
                         STUDIO
+                    </Link>
+                    <Link
+                        href='#'
+                        className={`${pathname === '/staking' ? 'text-[#e879f9] font-bold' : 'text-muted-foreground hover:text-[#e879f9] duration-300 ease-in-out'}`}
+                    >
+                        COMMUNITY
                     </Link>
                 </nav>
             </nav>
