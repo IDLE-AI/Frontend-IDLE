@@ -2,6 +2,7 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Circle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function WalletButton() {
     return (
@@ -101,10 +102,13 @@ export default function WalletButton() {
                                                 }}
                                             >
                                                 {chain.iconUrl && (
-                                                    <img
+                                                    <Image
                                                         alt={chain.name ?? 'Chain icon'}
                                                         src={chain.iconUrl}
-                                                        style={{ width: 25, height: 25, }}
+                                                        width={25}
+                                                        height={25}
+                                                        className='object-cover'
+                                                        priority={true}
                                                     />
                                                 )}
                                             </div>

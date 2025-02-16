@@ -3,7 +3,7 @@ import React from 'react'
 import { ChartCandlestick, SendToBack, UserPlus } from 'lucide-react'
 import { Roadmap } from '@/components/Roadmap'
 import { ElizaParallax } from '@/components/ElizaParallax'
-import { HookTypewriter } from '@/components/HookTypewriter'
+
 export default function page() {
   return (
     <main className='space-y-40'>

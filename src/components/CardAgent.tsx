@@ -9,11 +9,11 @@ interface AgentProps {
     imageUrl: string;
 }
 
-export default function CardAgent({ name, ticker, price, marketCap, imageUrl }: AgentProps) {
+export default function CardAgent({ name, ticker, marketCap, imageUrl }: AgentProps) {
     // Format numbers with proper formatting
-    const formatPrice = (price: number) => {
-        return `$${price.toFixed(6)}`
-    }
+    // const formatPrice = (price: number) => {
+    //     return `$${price.toFixed(6)}`
+    // }
 
     const formatMarketCap = (marketCap: number) => {
         return new Intl.NumberFormat('en-US', {

@@ -10,28 +10,20 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 const client = new QueryClient();
 
-// const MantaPacificNetwork = {
-//     id: 169,
-//     name: 'Manta Pacific Sepolia Testnet',
-//     nativeCurrency: { name: 'Manta Pacific Network', symbol: 'ETH', decimals: 18 },
-//     rpcUrls: {
-//         default: { http: ['https://pacific-rpc.manta.network/http'] },
-//     },
-// } as const satisfies Chain;
-
-const MantaTestnet = {
-    id: 3441006,
+const MantaPacificNetwork = {
+    id: 169,
     name: 'Manta Pacific Sepolia Testnet',
-    nativeCurrency: { name: 'Manta Pacific Sepolia Testnet', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: { name: 'Manta Pacific Network', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
-        default: { http: ['https://pacific-rpc.sepolia-testnet.manta.network/http'] },
+        default: { http: ['https://pacific-rpc.manta.network/http'] },
     },
+
 } as const satisfies Chain;
 
 const RainbowKitconfig = getDefaultConfig({
     appName: 'AGHANIM AI',
     projectId: '4c501f56f38d62ce93788345d517592d',
-    chains: [MantaTestnet],
+    chains: [MantaPacificNetwork],
     ssr: true, // If your dApp uses server side rendering (SSR),
 });
 

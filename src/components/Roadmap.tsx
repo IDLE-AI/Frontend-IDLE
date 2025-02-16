@@ -25,7 +25,7 @@ export function Roadmap() {
                         </h1>
                         <ul className="list-disc list-inside text-muted-foreground">
                             <li>Launch Telegram Group & Twitter Account.</li>
-                            <li>Implement an "Early Adopter" program for users joining the whitelist for the token sale.</li>
+                            <li>Implement an &quot;Early Adopter&quot; program for users joining the whitelist for the token sale.</li>
                         </ul>
                     </div>
                     <div>
@@ -106,7 +106,7 @@ export function Roadmap() {
                         </h1>
                         <ul className="list-disc list-inside text-muted-foreground">
                             <li>Enable users to build, deploy, and interact with AI Agents in a more intuitive and user-friendly interface.</li>
-                            <li>Introduce a "Studio Mode" for advanced users to customize AI Agents with advanced settings.</li>
+                            <li>Introduce a &quot;Studio Mode&quot; for advanced users to customize AI Agents with advanced settings.</li>
                             <li>Integrate an NFT Marketplace to simplify buying/selling user-generated content.</li>
                         </ul>
                     </div>
@@ -117,7 +117,7 @@ export function Roadmap() {
                         </h1>
                         <ul className="list-disc list-inside text-muted-foreground">
                             <li>Integrate with other AI infrastructures to provide a more comprehensive AI experience. (Virtual Protocol, etc)</li>
-                            <li>Develop a "Multi-Agent" system to allow users to create and manage multiple AI Agents.</li>
+                            <li>Develop a &quot;Multi-Agent&quot; system to allow users to create and manage multiple AI Agents.</li>
                         </ul>
                     </div>
                     <div>
