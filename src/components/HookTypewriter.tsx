@@ -1,6 +1,4 @@
 "use client";
-
-import { Button } from "./ui/button";
 import { TypewriterEffectSmooth } from "./ui/typewriter-effect";
 
 export function HookTypewriter() {
