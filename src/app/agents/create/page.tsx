@@ -3,14 +3,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { FACTORY_EXCHANGE_ABI, FACTORY_EXCHANGE_ADDRESS } from '@/contracts/ABI'
+import { FACTORY_EXCHANGE_ABI, FACTORY_EXCHANGE_ADDRESS, IDLE_TOKEN_ABI, IDLE_TOKEN_ADDRESS, ERC20_ABI } from '@/contracts/ABI'
 import { useState } from 'react'
-import { useAccount, useWriteContract } from 'wagmi'
+import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import WalletButton from '@/components/WalletButton'
-
+import { parseUnits } from 'viem'
+import { waitForTransactionReceipt } from 'wagmi/actions'
+import { RainbowKitconfig } from '@/config/RainbowkitConfig'
 interface AgentForm {
     image: File | null;
     imagePreview: string | null;
@@ -27,7 +29,10 @@ interface AgentForm {
 
 export default function CreateAgent() {
     const { address, isConnected } = useAccount()
-    const { data: hash, isPending, writeContract, isSuccess: IsSuccessWriteContract } = useWriteContract()
+    const { writeContractAsync, data: hash, isPending, isSuccess: isSuccessWriteContract } = useWriteContract()
+    const { data: transferHash, isPending: isPendingCreateToken, writeContract: WriteToken } = useWriteContract();
+    const { isLoading: isTransactionConfirming, isSuccess: isTransferSuccess } = useWaitForTransactionReceipt({ hash: hash })
+
     const [currentStep, setCurrentStep] = useState(0)
 
     const [formData, setFormData] = useState<AgentForm>({
@@ -41,10 +46,21 @@ export default function CreateAgent() {
         telegram: '',
         website: '',
         discord: '',
-        behavior: ''
+        behavior: '',
     })
 
     const [uploading, setUploading] = useState(false)
+
+    const { data: balanceIdleToken } = useReadContract({
+        abi: IDLE_TOKEN_ABI,
+        address: IDLE_TOKEN_ADDRESS,
+        functionName: 'balanceOf',
+        args: [address],
+    })
+
+    console.log("balanceIdleToken", balanceIdleToken)
+
+    // const balanceIdleTokenNumber = Number(balanceIdleToken)
 
     if (!isConnected) {
         return (
@@ -91,7 +107,8 @@ export default function CreateAgent() {
                 setFormData(prev => ({
                     ...prev,
                     image: file,
-                    imagePreview: reader.result as string
+                    imagePreview: reader.result as string,
+                    imageUrl: URL.createObjectURL(file)
                 }))
             }
             reader.readAsDataURL(file)
@@ -127,7 +144,7 @@ export default function CreateAgent() {
             formData.ticker.trim() !== '' &&
             formData.description.trim() !== '' &&
             formData.behavior.trim() !== '' &&
-            formData.image !== null
+            formData.imageUrl !== null
         )
     }
 
@@ -154,16 +171,59 @@ export default function CreateAgent() {
                 }
             }
 
-            // Then create token with image URL
-            await writeContract({
-                abi: FACTORY_EXCHANGE_ABI,
-                address: FACTORY_EXCHANGE_ADDRESS,
-                functionName: "createToken",
-                args: [formData.name, formData.ticker, 1000000000],
-                account: address,
-            })
+            // Validate fields before sending transaction
+            if (!ipfsUrl || !formData.description.trim() || !formData.behavior.trim()) {
+                alert('Please ensure all required fields are properly filled')
+                return
+            }
+
+            // Approve IDLE first
+            try {
+                const approveHash = await writeContractAsync({
+                    address: IDLE_TOKEN_ADDRESS,
+                    abi: ERC20_ABI,
+                    functionName: "approve",
+                    args: [FACTORY_EXCHANGE_ADDRESS, parseUnits("1000000000", 18)],
+                    account: address,
+                });
+
+
+                // Wait for approval transaction to complete
+                await waitForTransactionReceipt(RainbowKitconfig, { hash: approveHash })
+
+                // Then create token with image URL
+                const createResult = await writeContractAsync({
+                    abi: FACTORY_EXCHANGE_ABI,
+                    address: FACTORY_EXCHANGE_ADDRESS,
+                    functionName: "createToken",
+                    args: [
+                        formData.name,
+                        formData.ticker,
+                        1000000000,
+                        ipfsUrl,
+                        formData.description.trim(),
+                        formData.behavior.trim()
+                    ],
+                    account: address,
+                    gas: parseUnits("1000000", 0),
+                })
+
+                await waitForTransactionReceipt(RainbowKitconfig, { hash: createResult })
+            } catch (error) {
+                console.error('Transaction failed:', error)
+                // Handle user rejection specifically
+                if (error instanceof Error && error.message.includes('User rejected')) {
+                    alert('Transaction canceled by user')
+                } else {
+                    throw error
+                }
+            }
         } catch (error) {
             console.error('Transaction failed:', error)
+            const errorMessage = error instanceof Error ?
+                (error.message.includes('User rejected') ? 'Transaction canceled by user' : error.message) :
+                'Unknown error'
+            alert('Transaction failed: ' + errorMessage)
         }
     }
 
@@ -193,6 +253,7 @@ export default function CreateAgent() {
                         className='space-y-5'
                     >
                         <h1 className='text-2xl font-bold uppercase text-[#e879f9]'>Agent Details</h1>
+                        <span className={`${Number(balanceIdleToken) > 0 ? "text-green-500" : "text-red-500"}`}>{Number(balanceIdleToken) > 0 ? "You are Eligible to Create an AI Agent." : "Please buy IDLE tokens first to create an agent."}</span>
                         <div className='space-y-2'>
                             <Label htmlFor="image">Agent Image</Label>
                             <div className='flex items-center gap-5'>
@@ -406,8 +467,7 @@ export default function CreateAgent() {
                     </Button>
 
                     <Button
-                        type="button"
-                        onClick={currentStep === steps.length - 1 ? handleSubmit : nextStep}
+                        type="submit"
                         className='rounded font-bold uppercase'
                         disabled={
                             (currentStep === steps.length - 1 &&
@@ -421,10 +481,10 @@ export default function CreateAgent() {
                     </Button>
                 </div>
 
-                {uploading && <p className="text-center text-yellow-500">Uploading image...</p>}
+                {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
                 {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
-                {IsSuccessWriteContract && <p className="text-center text-green-500">Agent Created Successfully!</p>}
-                {hash && (
+                {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
+                {isSuccessWriteContract && isTransferSuccess && hash && (
                     <p className="text-center text-sm">
                         Transaction Hash: {hash}
                     </p>

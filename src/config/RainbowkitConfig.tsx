@@ -10,17 +10,27 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 const client = new QueryClient();
 
+// const MantaPacificNetwork = {
+//     id: 169,
+//     name: 'Manta Pacific L2 Rollup',
+//     nativeCurrency: { name: 'Manta Pacific L2 Rollup', symbol: 'ETH', decimals: 18 },
+//     rpcUrls: {
+//         default: { http: ['https://pacific-rpc.manta.network/http'] },
+//     },
+
+// } as const satisfies Chain;
+
 const MantaPacificNetwork = {
-    id: 169,
-    name: 'Manta Pacific L2 Rollup',
-    nativeCurrency: { name: 'Manta Pacific L2 Rollup', symbol: 'ETH', decimals: 18 },
+    id: 3441006,
+    name: 'Manta Pacific Sepolia Testnet',
+    nativeCurrency: { name: 'Manta Pacific Sepolia Testnet', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
-        default: { http: ['https://pacific-rpc.manta.network/http'] },
+        default: { http: ['	https://pacific-rpc.sepolia-testnet.manta.network/http'] },
     },
 
 } as const satisfies Chain;
 
-const RainbowKitconfig = getDefaultConfig({
+export const RainbowKitconfig = getDefaultConfig({
     appName: 'AGHANIM AI',
     projectId: '4c501f56f38d62ce93788345d517592d',
     chains: [MantaPacificNetwork],
