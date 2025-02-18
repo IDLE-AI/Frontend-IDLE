@@ -449,6 +449,7 @@ export default function CreateAgent() {
                         disabled={
                             (currentStep === steps.length - 1 &&
                                 (isPending || !validateRequiredFields()))
+                            || isTransactionConfirming
                         }
                     >
                         {currentStep === steps.length - 1
@@ -461,7 +462,7 @@ export default function CreateAgent() {
                 {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
                 {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
                 {isTransactionConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>}
-                {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>}
+                {/* {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>} */}
                 {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
                 {isSuccessWriteContract && isTransferSuccess && hash && (
                     <p className="text-center text-sm">
