@@ -49,6 +49,8 @@ export default function CreateAgent() {
         behavior: '',
     })
 
+    console.log("formData", formData)
+
     const [uploading, setUploading] = useState(false)
 
     const { data: balanceIdleToken } = useReadContract({
@@ -57,8 +59,6 @@ export default function CreateAgent() {
         functionName: 'balanceOf',
         args: [address],
     })
-
-    console.log("balanceIdleToken", balanceIdleToken)
 
     // const balanceIdleTokenNumber = Number(balanceIdleToken)
 
@@ -87,8 +87,8 @@ export default function CreateAgent() {
                 ...prev,
                 imageUrl: ipfsUrl
             }))
-
             setUploading(false)
+            console.log("ipfsUrl", ipfsUrl)
             return ipfsUrl
         } catch (e) {
             console.error(e)
@@ -107,8 +107,7 @@ export default function CreateAgent() {
                 setFormData(prev => ({
                     ...prev,
                     image: file,
-                    imagePreview: reader.result as string,
-                    imageUrl: URL.createObjectURL(file)
+                    imagePreview: reader.result as string
                 }))
             }
             reader.readAsDataURL(file)
@@ -144,7 +143,7 @@ export default function CreateAgent() {
             formData.ticker.trim() !== '' &&
             formData.description.trim() !== '' &&
             formData.behavior.trim() !== '' &&
-            formData.imageUrl !== null
+            formData.image !== null
         )
     }
 
@@ -171,19 +170,13 @@ export default function CreateAgent() {
                 }
             }
 
-            // Validate fields before sending transaction
-            if (!ipfsUrl || !formData.description.trim() || !formData.behavior.trim()) {
-                alert('Please ensure all required fields are properly filled')
-                return
-            }
-
             // Approve IDLE first
             try {
                 const approveHash = await writeContractAsync({
                     address: IDLE_TOKEN_ADDRESS,
                     abi: ERC20_ABI,
                     functionName: "approve",
-                    args: [FACTORY_EXCHANGE_ADDRESS, parseUnits("1000000000", 18)],
+                    args: [FACTORY_EXCHANGE_ADDRESS, parseUnits("10", 18)],
                     account: address,
                 });
 
@@ -196,34 +189,19 @@ export default function CreateAgent() {
                     abi: FACTORY_EXCHANGE_ABI,
                     address: FACTORY_EXCHANGE_ADDRESS,
                     functionName: "createToken",
-                    args: [
-                        formData.name,
-                        formData.ticker,
-                        1000000000,
-                        ipfsUrl,
-                        formData.description.trim(),
-                        formData.behavior.trim()
-                    ],
+                    args: [formData.name, formData.ticker, parseUnits("10", 18), ipfsUrl, formData.description, formData.behavior],
                     account: address,
-                    gas: parseUnits("1000000", 0),
+                    // gas: parseUnits("1000000", 0),
                 })
 
                 await waitForTransactionReceipt(RainbowKitconfig, { hash: createResult })
             } catch (error) {
                 console.error('Transaction failed:', error)
-                // Handle user rejection specifically
-                if (error instanceof Error && error.message.includes('User rejected')) {
-                    alert('Transaction canceled by user')
-                } else {
-                    throw error
-                }
+                throw error
             }
         } catch (error) {
             console.error('Transaction failed:', error)
-            const errorMessage = error instanceof Error ?
-                (error.message.includes('User rejected') ? 'Transaction canceled by user' : error.message) :
-                'Unknown error'
-            alert('Transaction failed: ' + errorMessage)
+            alert('Transaction failed: ' + (error instanceof Error ? error.message : 'Unknown error'))
         }
     }
 
@@ -483,6 +461,7 @@ export default function CreateAgent() {
 
                 {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
                 {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
+                {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>}
                 {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
                 {isSuccessWriteContract && isTransferSuccess && hash && (
                     <p className="text-center text-sm">

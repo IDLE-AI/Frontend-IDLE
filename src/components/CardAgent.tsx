@@ -28,7 +28,6 @@ export default function CardAgent({
 
     const formatMarketCap = (value: number) => {
         return new Intl.NumberFormat('en-US', {
-            notation: 'compact',
             maximumFractionDigits: 2,
         }).format(value)
     }
@@ -75,13 +74,13 @@ export default function CardAgent({
                         <div>
                             <p className="text-sm text-muted-foreground">Price</p>
                             <p className="text-lg font-bold text-[#e879f9]">
-                                ${formatNumber(price, 8)}
+                                ${formatNumber(price / 1e18, 4)}
                             </p>
                         </div>
                         <div>
                             <p className="text-sm text-muted-foreground">Market Cap</p>
                             <p className="text-lg font-bold text-[#e879f9]">
-                                ${formatMarketCap(marketCap)}
+                                ${formatMarketCap(marketCap / 1e14)}
                             </p>
                         </div>
                     </div>

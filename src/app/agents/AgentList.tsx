@@ -1,4 +1,5 @@
 'use client';
+import CardAgent from '@/components/CardAgent';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useEffect } from 'react';
 import { useReadContract } from 'wagmi';
@@ -22,7 +23,7 @@ interface TokenInfo {
 type GetAllIssueReturn = [
     TokenInfo[],  // array of TokenInfo
     string[],     // array of addresses
-    bigint[]      // array of uint256 IDs
+    bigint[],
 ];
 
 // 2. ABI
@@ -67,15 +68,20 @@ const contractABI = [
 ];
 
 // 3. Alamat kontrak
-const contractAddress = '0xCd40A9ce16C3c90d441ae47b7DC96Fb6CdB9d892';
+const contractAddress = '0x116Aac1D95f32D699ABaf48a781BE83b8c4F8b43';
 
 export default function AgentList() {
     // 4. Gunakan generic agar data bertipe GetAllIssueReturn
-    const { data, isError, isLoading, error } = useReadContract<GetAllIssueReturn>({
-        address: contractAddress,
+    const { data, isError, isLoading, error } = useReadContract({
         abi: contractABI,
+        address: contractAddress,
         functionName: 'getAllIssue',
-    });
+    }) as {
+        data: GetAllIssueReturn | undefined;
+        isError: boolean;
+        isLoading: boolean;
+        error: Error | null;
+    };
 
     // Logging
     useEffect(() => {
@@ -102,41 +108,19 @@ export default function AgentList() {
             {data ? (
                 <div>
                     <h2>Daftar Token</h2>
-                    <ul>
-                        {data[0].map((token, index) => {
-                            // Gunakan Number(...) atau String(...) untuk menampilkan
-                            const createdAtSec = Number(token.createdAt); // bigint -> number
-                            const createdDate = new Date(createdAtSec * 1000).toLocaleString();
-                            const totalSupplyStr = String(token.totalSupply);
-
-                            return (
-                                <li
-                                    key={index}
-                                    style={{
-                                        marginBottom: '1rem',
-                                        border: '1px solid #ccc',
-                                        padding: '1rem',
-                                        borderRadius: '8px',
-                                    }}
-                                >
-                                    <p><strong>ID:</strong> {String(data[2][index])}</p>
-                                    <p><strong>Nama:</strong> {token.name}</p>
-                                    <p><strong>Simbol:</strong> {token.symbol}</p>
-                                    <p><strong>Total Supply:</strong> {totalSupplyStr}</p>
-                                    <p><strong>Owner:</strong> {token.owner}</p>
-                                    <p><strong>Dibuat:</strong> {createdDate}</p>
-                                    <p><strong>Icon URL:</strong> {token.iconUrl}</p>
-                                    <p><strong>Deskripsi:</strong> {token.description}</p>
-                                    <p><strong>Behaviour:</strong> {token.behaviour}</p>
-                                    <p><strong>Open Price:</strong> {String(token.openPrice)}</p>
-                                    <p><strong>High Price:</strong> {String(token.highPrice)}</p>
-                                    <p><strong>Low Price:</strong> {String(token.lowPrice)}</p>
-                                    <p><strong>Close Price:</strong> {String(token.closePrice)}</p>
-                                    <p><strong>Token Address:</strong> {data[1][index]}</p>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {data[0].map((token: TokenInfo, index: number) => (
+                            <CardAgent
+                                key={index}
+                                id={String(data[2][index])}
+                                name={token.name}
+                                ticker={token.symbol}
+                                price={Number(token.closePrice)}
+                                marketCap={Number(token.totalSupply) * Number(token.closePrice)}
+                                imageUrl={token.iconUrl}
+                            />
+                        ))}
+                    </div>
                 </div>
             ) : (
                 <p>Data belum tersedia.</p>
