@@ -1,6 +1,5 @@
 'use client';
 import CardAgent from '@/components/CardAgent';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useEffect } from 'react';
 import { useReadContract } from 'wagmi';
 

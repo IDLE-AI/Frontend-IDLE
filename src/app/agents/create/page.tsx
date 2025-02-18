@@ -30,7 +30,6 @@ interface AgentForm {
 export default function CreateAgent() {
     const { address, isConnected } = useAccount()
     const { writeContractAsync, data: hash, isPending, isSuccess: isSuccessWriteContract } = useWriteContract()
-    const { data: transferHash, isPending: isPendingCreateToken, writeContract: WriteToken } = useWriteContract();
     const { isLoading: isTransactionConfirming, isSuccess: isTransferSuccess } = useWaitForTransactionReceipt({ hash: hash })
 
     const [currentStep, setCurrentStep] = useState(0)
@@ -461,6 +460,7 @@ export default function CreateAgent() {
 
                 {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
                 {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
+                {isTransactionConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>}
                 {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>}
                 {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
                 {isSuccessWriteContract && isTransferSuccess && hash && (
