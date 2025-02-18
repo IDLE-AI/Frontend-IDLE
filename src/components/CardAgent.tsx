@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import moment from 'moment'
 
 interface Agent {
     id: string;
@@ -9,6 +10,8 @@ interface Agent {
     price: number;
     marketCap: number;
     imageUrl: string;
+    owner: string;
+    createdAt: number;
 }
 
 export default function CardAgent({
@@ -18,6 +21,8 @@ export default function CardAgent({
     price,
     marketCap,
     imageUrl,
+    owner,
+    createdAt,
 }: Agent) {
     const formatNumber = (num: number, decimals: number = 6) => {
         return num.toLocaleString('en-US', {
@@ -33,8 +38,8 @@ export default function CardAgent({
     }
 
     return (
-        <Link href={`/tokens/${id}`} className="block group">
-            <div className="p-6 bg-white/5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 hover:bg-white/10">
+        <Link href={`/agents/${id}`} className="block group">
+            <div className="p-6 bg-white/5 rounded shadow-md hover:shadow-lg transition-shadow duration-200 hover:bg-white/10">
                 <div className="relative aspect-square overflow-hidden rounded-xl group-hover:scale-105 transition-transform duration-300">
                     <Image
                         src={imageUrl || '/placeholder-image.jpg'}
@@ -53,7 +58,7 @@ export default function CardAgent({
                     <div>
                         <h1 className="text-xl font-bold text-primary">{name}</h1>
                         <h2 className="text-lg font-semibold text-[#e879f9]">{ticker}</h2>
-                        <p className="text-sm text-muted-foreground">Last updated: 4w ago</p>
+                        <p className="text-sm text-muted-foreground">Created at {moment(createdAt * 1000).fromNow()}</p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -66,7 +71,7 @@ export default function CardAgent({
                             <path d="M11.46 12.4l-.3.13c-.03.01-.06.02-.09.02-.03 0-.06-.01-.09-.02l-.3-.13a.75.75 0 01-.63-.45c-.06-.18-.09-.38-.09-.58 0-.19.03-.38.09-.57.06-.18.15-.34.27-.48l.3-.13c.03-.01.06-.02.09-.02.03 0 .06.01.09.02l.3.13c.12.05.21.15.27.28.06.19.09.39.09.58 0 .2-.03.39-.09.57-.06.19-.15.35-.27.48l-.3.13c-.03.01-.06.02-.09.02-.03 0-.06-.01-.09-.02l-.3-.13a.75.75 0 01-.63-.45zm-7.46 5.6a.75.75 0 01-.63-.45l-.3-.13c-.03-.01-.06-.02-.09-.02-.03 0-.06.01-.09.02l-.3.13a.75.75 0 01-.63.45c-.06.18-.09.38-.09.58 0 .19.03.38.09.57.06.18.15.34.27.48l.3.13c.03.01.06.02.09.02.03 0 .06-.01.09-.02l.3-.13c.12-.05.21-.15.27-.28.06-.19.09-.39.09-.58 0-.2-.03-.39-.09-.57-.06-.19-.15-.35-.27-.48l-.3-.13c-.03-.01-.06-.02-.09-.02-.03 0-.06.01-.09.02l-.3.13a.75.75 0 01-.63.45zm12.92-11.2c-.06.18-.09.38-.09.58 0 .19.03.38.09.57.06.18.15.34.27.48l.3.13c.03.01.06.02.09.02.03 0 .06-.01.09-.02l.3-.13a.75.75 0 01.63-.45c.06-.18.09-.38.09-.58 0-.19-.03-.38-.09-.57-.06-.18-.15-.34-.27-.48l-.3-.13c-.03-.01-.06-.02-.09-.02-.03 0-.06.01-.09.02l-.3.13a.75.75 0 01-.63.45zm-7.46-5.6a.75.75 0 01.63-.45l.3-.13c.03-.01.06-.02.09-.02.03 0 .06.01.09.02l.3.13a.75.75 0 01.63.45c.06.18.09.38.09.58 0 .19-.03.38-.09.57-.06.18-.15.34-.27.48l-.3.13c-.03.01-.06.02-.09.02-.03 0-.06-.01-.09-.02l-.3-.13a.75.75 0 01-.63-.45c-.06-.18-.09-.38-.09-.58 0-.19.03-.38.09-.57.06-.18.15-.34.27-.48l.3-.13c.03-.01.06-.02.09-.02.03 0 .06.01.09.02l.3.13a.75.75 0 01.63.45z" />
                         </svg>
                         <p className="text-sm text-muted-foreground">
-                            {/* Created by: {creatorAddress?.slice(0, 6)}...{creatorAddress?.slice(-4)} */}
+                            Created by: {owner?.slice(0, 6)}...{owner?.slice(-4)}
                         </p>
                     </div>
 

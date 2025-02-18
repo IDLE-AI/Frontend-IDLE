@@ -90,13 +90,12 @@ export default function AgentList() {
         }
     }, [data, error]);
 
+    // console.log(data[0])
+
     return (
         <div style={{ padding: '2rem' }}>
             {/* <ConnectButton /> */}
-            <h1>Data Token</h1>
-
             {isLoading && <p>Loading...</p>}
-
             {isError && (
                 <p style={{ color: 'red' }}>
                     Error saat mengambil data: {error ? error.message : 'Unknown error'}
@@ -106,17 +105,18 @@ export default function AgentList() {
             {/* 5. Render data jika ada */}
             {data ? (
                 <div>
-                    <h2>Daftar Token</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                         {data[0].map((token: TokenInfo, index: number) => (
                             <CardAgent
                                 key={index}
                                 id={String(data[2][index])}
                                 name={token.name}
+                                owner={token.owner}
                                 ticker={token.symbol}
                                 price={Number(token.closePrice)}
                                 marketCap={Number(token.totalSupply) * Number(token.closePrice)}
                                 imageUrl={token.iconUrl}
+                                createdAt={Number(token.createdAt)}
                             />
                         ))}
                     </div>

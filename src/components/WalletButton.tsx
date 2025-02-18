@@ -1,7 +1,7 @@
 'use client'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
-import { Circle } from 'lucide-react';
+import { Circle, Wallet } from 'lucide-react';
 import Image from 'next/image';
 
 export default function WalletButton() {
@@ -42,6 +42,7 @@ export default function WalletButton() {
                                     <Button onClick={openConnectModal} type="button"
                                         className='rounded font-bold'
                                         size={'lg'}>
+                                        <Wallet className='w-10 h-10' />
                                         Connect Wallet
                                     </Button>
                                 );

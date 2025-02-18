@@ -33,8 +33,9 @@ export default function Header() {
                         STUDIO
                     </Link>
                     <Link
-                        href='#'
-                        className={`${pathname === '/staking' ? 'text-[#e879f9] font-bold' : 'text-muted-foreground hover:text-[#e879f9] duration-300 ease-in-out'}`}
+                        href='https://bento.me/idle'
+                        target='_blank'
+                        className={`${pathname === 'https://bento.me/idle' ? 'text-[#e879f9] font-bold' : 'text-muted-foreground hover:text-[#e879f9] duration-300 ease-in-out'}`}
                     >
                         COMMUNITY
                     </Link>
