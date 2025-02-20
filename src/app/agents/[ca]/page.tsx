@@ -10,7 +10,6 @@ import TokenChart from '@/components/TokenChart'
 import { useAccount, useReadContract } from 'wagmi'
 import { FACTORY_EXCHANGE_ABI, FACTORY_EXCHANGE_ADDRESS } from '@/contracts/ABI'
 import { useParams } from 'next/navigation'
-import moment from 'moment'
 
 type TokenDetailsType = [
     string, // name

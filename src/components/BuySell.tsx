@@ -5,7 +5,7 @@ import { Input } from './ui/input'
 import { useReadContract } from 'wagmi'
 import { IDLE_TOKEN_ABI, IDLE_TOKEN_ADDRESS } from '@/contracts/ABI'
 
-export default function BuySell({ address }: { address: any }) {
+export default function BuySell({ address }: { address: string }) {
 
     const { data: balanceIdleToken } = useReadContract({
         abi: IDLE_TOKEN_ABI,
