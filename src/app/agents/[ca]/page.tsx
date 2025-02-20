@@ -48,7 +48,6 @@ export default function Page() {
     const name = tokenDetails[0];
     const symbol = tokenDetails[1];
     const owner = tokenDetails[3];
-    // const createdAt = tokenDetails[4];
     const iconUrl = tokenDetails[5];
     const description = tokenDetails[6];
 
@@ -109,7 +108,7 @@ export default function Page() {
                     <div className="border p-5">
                         <h1 className="text-lg font-bold">SWAP {name}</h1>
                         <h2 className="text-sm text-muted-foreground">Exchange your tokens easily</h2>
-                        <BuySell address={address} />
+                        <BuySell address={address ?? ''} />
                     </div>
                 </div>
             </div>
