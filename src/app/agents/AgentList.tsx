@@ -1,6 +1,5 @@
 'use client';
 import CardAgent from '@/components/CardAgent';
-import { useEffect, useState } from 'react';
 import { useReadContract } from 'wagmi';
 
 // 1. Definisikan interface TokenInfo dan tipe return

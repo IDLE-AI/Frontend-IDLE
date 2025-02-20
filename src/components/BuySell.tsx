@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from './ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { Input } from './ui/input'
-import { useAccount, useReadContract } from 'wagmi'
+import { useReadContract } from 'wagmi'
 import { IDLE_TOKEN_ABI, IDLE_TOKEN_ADDRESS } from '@/contracts/ABI'
 
 export default function BuySell({ address }: { address: any }) {

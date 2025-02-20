@@ -10,6 +10,7 @@ import TokenChart from '@/components/TokenChart'
 import { useAccount, useReadContract } from 'wagmi'
 import { FACTORY_EXCHANGE_ABI, FACTORY_EXCHANGE_ADDRESS } from '@/contracts/ABI'
 import { useParams } from 'next/navigation'
+import moment from 'moment'
 
 export default function Page() {
     const { ca } = useParams();
@@ -34,25 +35,17 @@ export default function Page() {
         description = tokenDetails[6],
     } = tokenDetails
 
-
-
-
-    // const tokenImage = tokenDetails?.[5] || '/placeholder.png'; // Fallback image
-    // const tokenName = tokenDetails?.[0] || 'Unknown Token';
-    const tokenPrice = Number(tokenDetails?.[11]) / 1e18 || 0;
-    const marketCap = (Number(tokenDetails?.[2]) * Number(tokenDetails?.[11])) / 1e14 || 0;
-    // const description = tokenDetails?.[6] || 'No description available';
-
+    // Convert BigInt values to numbers explicitly
+    const tokenPrice = Number(tokenDetails[11].toString()) / 1e18 || 0;
+    const marketCap = (Number(tokenDetails[2].toString()) * Number(tokenDetails[11].toString())) / 1e14 || 0;
 
     return (
         <main className="xl:m-5 space-y-5 xl:mx-10 2xl:mx-40">
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-                {/* Token Chart Section */}
                 <div className="border p-5 xl:col-span-2">
                     <TokenChart />
                 </div>
 
-                {/* Token Info Section */}
                 <div className="space-y-5">
                     <div className="border p-5 space-y-5">
                         <div className="flex items-center gap-5">
@@ -69,6 +62,8 @@ export default function Page() {
                                 <h1 className="text-xl font-bold">{name}</h1>
                                 <p className="text-sm">$ {symbol}</p>
                                 <p className="text-sm truncate text-muted-foreground">created by: {owner?.slice(0, 6)}...{owner?.slice(-4)}</p>
+                                <p className="text-sm text-muted-foreground">Created at {moment(Number(createdAt.toString()) * 1000).fromNow()}</p>
+
                                 <Button variant="secondary" className="mt-3">
                                     Chat with AI
                                 </Button>
@@ -92,7 +87,6 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* Swap Section */}
                     <div className="border p-5">
                         <h1 className="text-lg font-bold">SWAP {name}</h1>
                         <h2 className="text-sm text-muted-foreground">Exchange your tokens easily</h2>
@@ -101,7 +95,6 @@ export default function Page() {
                 </div>
             </div>
 
-            {/* Transactions Section */}
             <div className="border p-5">
                 <h1 className="text-lg font-bold">TRANSACTIONS</h1>
                 <Transactions />
@@ -110,7 +103,6 @@ export default function Page() {
     )
 }
 
-// Reusable Info Block Component
 const InfoBlock = ({ label, value }: { label: string; value: string }) => (
     <div>
         <p className="text-sm text-muted-foreground">{label}</p>
@@ -118,7 +110,6 @@ const InfoBlock = ({ label, value }: { label: string; value: string }) => (
     </div>
 );
 
-// Reusable Social Link Component
 const SocialLink = ({ href, label, icon }: { href: string; label?: string; icon?: React.ReactNode }) => (
     <Link href={href} className="border p-1 flex items-center justify-center text-sm text-muted-foreground">
         {icon || label}
