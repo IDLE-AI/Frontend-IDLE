@@ -1,6 +1,6 @@
 'use client';
 import CardAgent from '@/components/CardAgent';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useReadContract } from 'wagmi';
 
 // 1. Definisikan interface TokenInfo dan tipe return
@@ -83,14 +83,15 @@ export default function AgentList() {
     };
 
     // Logging
-    useEffect(() => {
-        console.log('Fetched data:', data);
-        if (error) {
-            console.error('Error detail:', error);
-        }
-    }, [data, error]);
+    // useEffect(() => {
+    //     console.log('Fetched data:', data);
+    //     if (error) {
+    //         console.error('Error detail:', error);
+    //     }
+    // }, [data, error]);
 
     // console.log(data[0])
+
 
     return (
         <div style={{ padding: '2rem' }}>
@@ -109,7 +110,7 @@ export default function AgentList() {
                         {data[0].map((token: TokenInfo, index: number) => (
                             <CardAgent
                                 key={index}
-                                id={String(data[2][index])}
+                                id={String(data[1][index])}
                                 name={token.name}
                                 owner={token.owner}
                                 ticker={token.symbol}

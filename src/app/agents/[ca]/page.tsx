@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import Image from 'next/image'
 import { Globe, Twitter } from 'lucide-react'
@@ -6,82 +7,120 @@ import Transactions from './Transactions'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import TokenChart from '@/components/TokenChart'
+import { useAccount, useReadContract } from 'wagmi'
+import { FACTORY_EXCHANGE_ABI, FACTORY_EXCHANGE_ADDRESS } from '@/contracts/ABI'
+import { useParams } from 'next/navigation'
 
-type Params = Promise<{ ca: string }>
+export default function Page() {
+    const { ca } = useParams();
+    const { address } = useAccount()
+    const { data: tokenDetails, isLoading, isError } = useReadContract({
+        address: FACTORY_EXCHANGE_ADDRESS,
+        abi: FACTORY_EXCHANGE_ABI,
+        functionName: 'tokenDetails',
+        args: [ca],
+    }) as any;
 
-export default async function page({ params }: { params: Params }) {
-    // const tokenContractAddress = "0xE463b4c1F36163a28bFa8F942248250FcbF58622"; // Ganti dengan alamat token yang ingin Anda tampilkan
-    const { ca } = await params
+    if (isLoading) return <div className="text-center py-10">Loading...</div>;
+    if (isError) return <div className="text-center py-10 text-red-500">Error fetching token details</div>;
+    if (!tokenDetails) return <div className="text-center py-10 text-gray-500">No token details available</div>;
+
+    const {
+        name = tokenDetails[0],
+        symbol = tokenDetails[1],
+        owner = tokenDetails[3],
+        createdAt = tokenDetails[4],
+        iconUrl = tokenDetails[5],
+        description = tokenDetails[6],
+    } = tokenDetails
+
+
+
+
+    // const tokenImage = tokenDetails?.[5] || '/placeholder.png'; // Fallback image
+    // const tokenName = tokenDetails?.[0] || 'Unknown Token';
+    const tokenPrice = Number(tokenDetails?.[11]) / 1e18 || 0;
+    const marketCap = (Number(tokenDetails?.[2]) * Number(tokenDetails?.[11])) / 1e14 || 0;
+    // const description = tokenDetails?.[6] || 'No description available';
+
+
     return (
-        <main className='xl:m-5 space-y-5 xl:mx-10 2xl:mx-40'>
-            <div className='grid grid-cols-3 gap-5'>
-                <div className='border p-5 col-span-2'>
+        <main className="xl:m-5 space-y-5 xl:mx-10 2xl:mx-40">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+                {/* Token Chart Section */}
+                <div className="border p-5 xl:col-span-2">
                     <TokenChart />
                 </div>
-                <div className='space-y-5'>
-                    <div className='border p-5 space-y-5'>
-                        <div className='flex items-center gap-5'>
+
+                {/* Token Info Section */}
+                <div className="space-y-5">
+                    <div className="border p-5 space-y-5">
+                        <div className="flex items-center gap-5">
                             <Image
-                                src="https://asset-2.tstatic.net/tribunnews/foto/bank/images/meme-pepe-ok.jpg"
-                                alt="agent"
+                                src={iconUrl}
+                                alt={name}
                                 width={150}
                                 height={150}
-                                priority={true}
-                                className='rounded aspect-square object-cover'
+                                priority
+                                className="rounded aspect-square object-cover"
                             />
-                            <div className='grid'>
-                                <h1 className='text-sm truncate text-muted-foreground'>{ca} w</h1>
-                                <h1 className='text-lg font-bold'>NAMA AI AGENT</h1>
-                                <p className='text-sm'>$ AIAGENT</p>
-                                <Button variant='secondary' className='mt-3'>
+                            <div className="grid">
+                                <h1 className="text-muted-foreground font-medium">CA: {ca?.slice(0, 6)}...{ca?.slice(-4)}</h1>
+                                <h1 className="text-xl font-bold">{name}</h1>
+                                <p className="text-sm">$ {symbol}</p>
+                                <p className="text-sm truncate text-muted-foreground">created by: {owner?.slice(0, 6)}...{owner?.slice(-4)}</p>
+                                <Button variant="secondary" className="mt-3">
                                     Chat with AI
                                 </Button>
                             </div>
                         </div>
-                        <div className='grid grid-cols-3'>
-                            <div>
-                                <p className='text-sm text-muted-foreground'>Price</p>
-                                <p className='text-lg font-bold'>$0.000100</p>
-                            </div>
-                            <div>
-                                <p className='text-sm text-muted-foreground'>Market Cap</p>
-                                <p className='text-lg font-bold'>$99.9K</p>
-                            </div>
-                            <div>
-                                <p className='text-sm text-muted-foreground'>Volume</p>
-                                <p className='text-lg font-bold'>$3.4M</p>
-                            </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <InfoBlock label="Price" value={`$${tokenPrice.toLocaleString("en-US")}`} />
+                            <InfoBlock label="Market Cap" value={`$${marketCap.toLocaleString("en-US")}`} />
                         </div>
 
                         <div>
-                            <p className='text-sm text-muted-foreground'>Description</p>
-                            <p className='text-sm'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+                            <p className="text-sm text-muted-foreground">Description</p>
+                            <p className="text-sm">{description}</p>
                         </div>
 
-                        <div className='grid grid-cols-3'>
-                            <Link href='https://twitter.com/' className='border p-1 place-items-center text-sm text-muted-foreground content-center'>
-                                CA: 0x123...
-                            </Link>
-                            <Link href='https://twitter.com/' className='border p-1 place-items-center text-sm text-muted-foreground content-center'>
-                                <Twitter />
-                            </Link>
-                            <Link href='https://twitter.com/' className='border p-1 place-items-center text-sm text-muted-foreground content-center'>
-                                <Globe />
-                            </Link>
+                        <div className="grid grid-cols-3 gap-2">
+                            <SocialLink href="https://twitter.com/" label="CA: 0x123..." />
+                            <SocialLink href="https://twitter.com/" icon={<Twitter />} />
+                            <SocialLink href="https://twitter.com/" icon={<Globe />} />
                         </div>
                     </div>
 
-                    <div className='border p-5'>
-                        <h1 className='text-lg font-bold'>SWAP NAMA TOKEN</h1>
-                        <h2 className='text-sm text-muted-foreground'>SWAP NAMA TOKEN</h2>
-                        <BuySell />
+                    {/* Swap Section */}
+                    <div className="border p-5">
+                        <h1 className="text-lg font-bold">SWAP {name}</h1>
+                        <h2 className="text-sm text-muted-foreground">Exchange your tokens easily</h2>
+                        <BuySell address={address} />
                     </div>
                 </div>
             </div>
-            <div className='border p-5'>
-                <h1 className='text-lg font-bold'>TRANSACTIONS</h1>
+
+            {/* Transactions Section */}
+            <div className="border p-5">
+                <h1 className="text-lg font-bold">TRANSACTIONS</h1>
                 <Transactions />
             </div>
         </main>
     )
 }
+
+// Reusable Info Block Component
+const InfoBlock = ({ label, value }: { label: string; value: string }) => (
+    <div>
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <p className="text-lg font-bold">{value}</p>
+    </div>
+);
+
+// Reusable Social Link Component
+const SocialLink = ({ href, label, icon }: { href: string; label?: string; icon?: React.ReactNode }) => (
+    <Link href={href} className="border p-1 flex items-center justify-center text-sm text-muted-foreground">
+        {icon || label}
+    </Link>
+);

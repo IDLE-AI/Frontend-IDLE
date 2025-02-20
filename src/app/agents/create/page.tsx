@@ -13,6 +13,7 @@ import WalletButton from '@/components/WalletButton'
 import { parseUnits } from 'viem'
 import { waitForTransactionReceipt } from 'wagmi/actions'
 import { RainbowKitconfig } from '@/config/RainbowkitConfig'
+import Link from 'next/link'
 interface AgentForm {
     image: File | null;
     imagePreview: string | null;
@@ -230,7 +231,10 @@ export default function CreateAgent() {
                         className='space-y-5'
                     >
                         <h1 className='text-2xl font-bold uppercase text-[#e879f9]'>Agent Details</h1>
-                        <span className={`${Number(balanceIdleToken) > 0 ? "text-green-500" : "text-red-500"}`}>{Number(balanceIdleToken) > 0 ? "You are Eligible to Create an AI Agent." : "Please buy IDLE tokens first to create an agent."}</span>
+                        <div>
+                            <p className={`${Number(balanceIdleToken) > 0 ? "text-green-500" : "text-red-500"}`}>{Number(balanceIdleToken) > 0 ? "You are Eligible to Create an AI Agent." : "Please buy IDLE tokens first to create an agent."}</p>
+                            <span className='text-sm text-muted-foreground'>{Number(balanceIdleToken).toLocaleString()} IDLE</span>
+                        </div>
                         <div className='space-y-2'>
                             <Label htmlFor="image">Agent Image</Label>
                             <div className='flex items-center gap-5'>
@@ -449,7 +453,7 @@ export default function CreateAgent() {
                         disabled={
                             (currentStep === steps.length - 1 &&
                                 (isPending || !validateRequiredFields()))
-                            || isTransactionConfirming
+                            || isTransactionConfirming || isSuccessWriteContract
                         }
                     >
                         {currentStep === steps.length - 1
@@ -459,16 +463,20 @@ export default function CreateAgent() {
                     </Button>
                 </div>
 
-                {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
-                {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
-                {isTransactionConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>}
-                {/* {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>} */}
-                {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
-                {isSuccessWriteContract && isTransferSuccess && hash && (
-                    <p className="text-center text-sm">
-                        Transaction Hash: {hash}
-                    </p>
-                )}
+                <div className='grid place-content-center gap-5'>
+                    {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
+                    {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
+                    {isTransactionConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>}
+                    {/* {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>} */}
+                    {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
+                    {isSuccessWriteContract && isTransferSuccess && hash && (
+                        <Button variant={'outline'} asChild>
+                            <Link target='_blank' href={`https://pacific-explorer.sepolia-testnet.manta.network/tx/${hash}`}>
+                                View Transaction Details
+                            </Link>
+                        </Button>
+                    )}
+                </div>
             </motion.form>
         </motion.main>
     )
