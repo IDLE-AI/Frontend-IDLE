@@ -93,9 +93,9 @@ export default function AgentList() {
 
 
     return (
-        <div style={{ padding: '2rem' }}>
+        <div>
             {/* <ConnectButton /> */}
-            {isLoading && <p>Loading...</p>}
+            {isLoading && <p className='text-center'>Loading...</p>}
             {isError && (
                 <p style={{ color: 'red' }}>
                     Error saat mengambil data: {error ? error.message : 'Unknown error'}
@@ -103,7 +103,7 @@ export default function AgentList() {
             )}
 
             {/* 5. Render data jika ada */}
-            {data ? (
+            {data && (
                 <div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                         {data[0].map((token: TokenInfo, index: number) => (
@@ -121,8 +121,6 @@ export default function AgentList() {
                         ))}
                     </div>
                 </div>
-            ) : (
-                <p>Data belum tersedia.</p>
             )}
         </div>
     );

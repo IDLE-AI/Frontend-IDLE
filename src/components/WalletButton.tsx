@@ -3,6 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Circle, Wallet } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function WalletButton() {
     return (
@@ -119,13 +120,17 @@ export default function WalletButton() {
                                             </div>
                                         </div>
                                     )}
-                                    <Button onClick={openAccountModal} type="button" variant={'outline'} className='rounded font-bold'
-                                        size={'lg'}>
-                                        {account.displayName}
-                                        {account.displayBalance
-                                            ? ` (${account.displayBalance})`
-                                            : ''}
-                                    </Button>
+                                    <div className='flex flex-col gap-2'>
+                                        <Button onClick={openAccountModal} type="button" variant={'outline'} className='rounded font-bold'
+                                            size={'lg'}>
+                                            {account.displayName}
+                                            {account.displayBalance
+                                                ? ` (${account.displayBalance})`
+                                                : ''}
+
+                                        </Button>
+                                        {/* <Link href={`/profile/${account.address}`} className='text-sm self-center'>[View Profile]</Link> */}
+                                    </div>
                                 </div>
                             );
                         })()}

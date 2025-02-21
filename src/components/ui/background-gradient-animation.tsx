@@ -89,7 +89,7 @@ export const BackgroundGradientAnimation = ({
   return (
     <div
       className={cn(
-        "h-screen w-full relative overflow-hidden top-0 left-0 bg-[linear-gradient(40deg,var(--gradient-background-start),var(--gradient-background-end))] after:absolute after:bottom-0 after:h-32 after:w-full after:bg-gradient-to-t after:from-background after:to-transparent",
+        "h-screen w-full relative overflow-hidden top-0 left-0 bg-[linear-gradient(40deg,var(--gradient-background-start),var(--gradient-background-end))] after:absolute after:bottom-0 after:h-32 after:w-full after:bg-linear-to-t after:from-background after:to-transparent",
         containerClassName
       )}
     >
@@ -99,10 +99,10 @@ export const BackgroundGradientAnimation = ({
             <feGaussianBlur
               in="SourceGraphic"
               stdDeviation="10"
-              result="blur"
+              result="blur-sm"
             />
             <feColorMatrix
-              in="blur"
+              in="blur-sm"
               mode="matrix"
               values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
               result="goo"

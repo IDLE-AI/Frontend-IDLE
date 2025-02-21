@@ -8,7 +8,7 @@ import WalletButton from './WalletButton'
 export default function Header() {
     const pathname = usePathname()
     return (
-        <header className={pathname === '/' ? 'grid grid-cols-2 items-center my-5 xl:mx-40 2xl:mx-60 absolute top-0 left-0 right-0 z-50' : 'grid grid-cols-2 items-center xl:mx-10 2xl:mx-40 border-b-2 py-7 border-[#e879f9]'}>
+        <header className={pathname === '/' ? 'grid grid-cols-2 items-center my-5 xl:mx-40 2xl:mx-60 absolute top-0 left-0 right-0 z-50' : 'grid grid-cols-2 items-center xl:mx-10 2xl:mx-40 py-7'}>
             <nav className='flex items-center gap-10'>
                 <Link href='/' className='text-2xl font-bold'>
                     <Image src='/images/idle-logo-primary.png' alt='logo' width={100} height={100} />

@@ -389,95 +389,97 @@ export default function CreateAgent() {
     }
 
     return (
-        <motion.main
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className='max-w-xl mx-auto my-10 border p-4'
-        >
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
+        <main className='bg-radial from-[#4a044e] to-black'>
+            <motion.main
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='max-w-xl mx-auto my-10 rounded p-5 bg-secondary'
             >
-                <div className="flex justify-between items-center">
-                    {steps.map((step, index) => (
-                        <div key={index} className="flex items-center">
-                            <motion.div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center 
-                                    ${index <= currentStep ? 'bg-[#e879f9]' : 'bg-primary/20'}`}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: index * 0.2 }}
-                            >
-                                {index + 1}
-                            </motion.div>
-                            {index < steps.length - 1 && (
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-8"
+                >
+                    <div className="flex justify-between items-center">
+                        {steps.map((step, index) => (
+                            <div key={index} className="flex items-center">
                                 <motion.div
-                                    className={`h-1 w-24 mx-2 ${index < currentStep ? 'bg-[#e879f9]' : 'bg-primary/20'}`}
-                                    initial={{ scaleX: 0 }}
-                                    animate={{ scaleX: 1 }}
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center 
+                                    ${index <= currentStep ? 'bg-[#e879f9]' : 'bg-primary/20'}`}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
                                     transition={{ delay: index * 0.2 }}
-                                />
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </motion.div>
+                                >
+                                    {index + 1}
+                                </motion.div>
+                                {index < steps.length - 1 && (
+                                    <motion.div
+                                        className={`h-1 w-24 mx-2 ${index < currentStep ? 'bg-[#e879f9]' : 'bg-primary/20'}`}
+                                        initial={{ scaleX: 0 }}
+                                        animate={{ scaleX: 1 }}
+                                        transition={{ delay: index * 0.2 }}
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
 
-            <motion.form
-                onSubmit={handleSubmit}
-                className='space-y-5'
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-            >
-                {renderStep()}
+                <motion.form
+                    onSubmit={handleSubmit}
+                    className='space-y-5'
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    {renderStep()}
 
-                <div className="flex justify-between mt-8">
-                    <Button
-                        type="button"
-                        onClick={prevStep}
-                        disabled={currentStep === 0}
-                        className={`${currentStep === 0 ? 'hidden' : 'rounded font-bold uppercase'}`}
-                        variant={'ghost'}
-                        size={'icon'}
-                    >
-                        <ArrowLeft />
-                    </Button>
-
-                    <Button
-                        type="submit"
-                        className='rounded font-bold uppercase'
-                        disabled={
-                            (currentStep === steps.length - 1 &&
-                                (isPending || !validateRequiredFields()))
-                            || isTransactionConfirming || isSuccessWriteContract
-                        }
-                    >
-                        {currentStep === steps.length - 1
-                            ? (isPending ? 'Creating Agent...' : 'Create Agent')
-                            : 'Next'
-                        }
-                    </Button>
-                </div>
-
-                <div className='grid place-content-center gap-5'>
-                    {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
-                    {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
-                    {isTransactionConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>}
-                    {/* {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>} */}
-                    {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
-                    {isSuccessWriteContract && isTransferSuccess && hash && (
-                        <Button variant={'outline'} asChild>
-                            <Link target='_blank' href={`https://pacific-explorer.sepolia-testnet.manta.network/tx/${hash}`}>
-                                View Transaction Details
-                            </Link>
+                    <div className="flex justify-between mt-8">
+                        <Button
+                            type="button"
+                            onClick={prevStep}
+                            disabled={currentStep === 0}
+                            className={`${currentStep === 0 ? 'hidden' : 'rounded font-bold uppercase'}`}
+                            variant={'ghost'}
+                            size={'icon'}
+                        >
+                            <ArrowLeft />
                         </Button>
-                    )}
-                </div>
-            </motion.form>
-        </motion.main>
+
+                        <Button
+                            type="submit"
+                            className='rounded font-bold uppercase'
+                            disabled={
+                                (currentStep === steps.length - 1 &&
+                                    (isPending || !validateRequiredFields()))
+                                || isTransactionConfirming || isSuccessWriteContract
+                            }
+                        >
+                            {currentStep === steps.length - 1
+                                ? (isPending ? 'Creating Agent...' : 'Create Agent')
+                                : 'Next'
+                            }
+                        </Button>
+                    </div>
+
+                    <div className='grid place-content-center gap-5'>
+                        {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
+                        {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
+                        {isTransactionConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>}
+                        {/* {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>} */}
+                        {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
+                        {isSuccessWriteContract && isTransferSuccess && hash && (
+                            <Button variant={'outline'} asChild>
+                                <Link target='_blank' href={`https://pacific-explorer.sepolia-testnet.manta.network/tx/${hash}`}>
+                                    View Transaction Details
+                                </Link>
+                            </Button>
+                        )}
+                    </div>
+                </motion.form>
+            </motion.main>
+        </main>
     )
 }
