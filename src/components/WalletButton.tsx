@@ -3,7 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Circle, Wallet } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 export default function WalletButton() {
     return (
