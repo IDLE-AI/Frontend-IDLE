@@ -52,8 +52,8 @@ export default function CreateAgent() {
                 args: [formik.values.name, formik.values.ticker, formik.values.iconUrl, formik.values.description, formik.values.twitter, formik.values.website, formik.values.behavior, parseUnits(formik.values.paymentAmount.toString(), 18)],
             })
 
-            // console.log('Approval Transaction:', approvalTx)
-            // console.log('Create Token Transaction:', createTokenTx)
+            console.log('Approval Transaction:', approvalTx)
+            console.log('Create Token Transaction:', createTokenTx)
         } catch (error) {
             console.error('Transaction failed:', error)
             alert('Transaction failed. Please try again.')
