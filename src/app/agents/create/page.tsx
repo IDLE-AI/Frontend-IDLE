@@ -3,78 +3,95 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { FACTORY_EXCHANGE_ABI, FACTORY_EXCHANGE_ADDRESS, IDLE_TOKEN_ABI, IDLE_TOKEN_ADDRESS, ERC20_ABI } from '@/contracts/ABI'
 import { useState } from 'react'
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import WalletButton from '@/components/WalletButton'
-import { parseUnits } from 'viem'
-import { waitForTransactionReceipt } from 'wagmi/actions'
-import { RainbowKitconfig } from '@/config/RainbowkitConfig'
 import Link from 'next/link'
-interface AgentForm {
-    image: File | null;
-    imagePreview: string | null;
-    imageUrl: string | null;
-    name: string;
-    ticker: string;
-    description: string;
-    twitter?: string;
-    telegram?: string;
-    website?: string;
-    discord?: string;
-    behavior: string;
-}
+import { TokenABI, TokenAddress } from '@/contracts/Token'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { FactoryTokenABI, FactoryTokenAddress } from '@/contracts/FactoryToken'
+import { parseUnits } from 'viem'
 
 export default function CreateAgent() {
     const { address, isConnected } = useAccount()
-    const { writeContractAsync, data: hash, isPending, isSuccess: isSuccessWriteContract } = useWriteContract()
-    const { isLoading: isTransactionConfirming, isSuccess: isTransferSuccess } = useWaitForTransactionReceipt({ hash: hash })
+
+    // Read the balance of the token
+    const { data: balanceIdleToken } = useReadContract({
+        address: TokenAddress,
+        abi: TokenABI,
+        functionName: "balanceOf",
+        args: [address], // Fallback address
+    })
+
+    // Prepare to write to the contract
+    const { data: transactionHash, isPending, writeContract, isSuccess, } = useWriteContract()
 
     const [currentStep, setCurrentStep] = useState(0)
+    // const [uploading, setUploading] = useState(false)
+    const [imagePreview, setImagePreview] = useState<string | null>(null)
 
-    const [formData, setFormData] = useState<AgentForm>({
-        image: null,
-        imagePreview: null,
-        imageUrl: null,
-        name: '',
-        ticker: '',
-        description: '',
-        twitter: '',
-        telegram: '',
-        website: '',
-        discord: '',
-        behavior: '',
-    })
+    const handleSubmit = async () => {
+        try {
+            // Approve the token transfer
+            const approvalTx = await writeContract({
+                address: TokenAddress,
+                abi: TokenABI,
+                functionName: "approve",
+                args: [FactoryTokenAddress, parseUnits(formik.values.paymentAmount.toString(), 18)], // Approve FactoryToken to spend paymentAmount
+            });
 
-    console.log("formData", formData)
+            // Create the token with payment
+            const createTokenTx = await writeContract({
+                address: FactoryTokenAddress,
+                abi: FactoryTokenABI,
+                functionName: "createTokenWithPayment",
+                args: [formik.values.name, formik.values.ticker, formik.values.iconUrl, formik.values.description, formik.values.twitter, formik.values.website, formik.values.behavior, parseUnits(formik.values.paymentAmount.toString(), 18)],
+            })
 
-    const [uploading, setUploading] = useState(false)
-
-    const { data: balanceIdleToken } = useReadContract({
-        abi: IDLE_TOKEN_ABI,
-        address: IDLE_TOKEN_ADDRESS,
-        functionName: 'balanceOf',
-        args: [address],
-    })
-
-    // const balanceIdleTokenNumber = Number(balanceIdleToken)
-
-    if (!isConnected) {
-        return (
-            <div className="h-screen flex flex-col items-center justify-center">
-                <h1 className="text-3xl font-bold mb-8 text-[#e879f9]">Connect Your Wallet</h1>
-                <p className="text-gray-400 mb-8">Please connect your wallet to create an agent</p>
-                <WalletButton />
-            </div>
-        )
+            // console.log('Approval Transaction:', approvalTx)
+            // console.log('Create Token Transaction:', createTokenTx)
+        } catch (error) {
+            console.error('Transaction failed:', error)
+            alert('Transaction failed. Please try again.')
+        }
     }
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            ticker: '',
+            iconUrl: '',
+            description: '',
+            twitter: '',
+            website: '',
+            behavior: '',
+            paymentAmount: '',
+        },
+        validationSchema: Yup.object({
+            name: Yup.string().required('Required'),
+            ticker: Yup.string().required('Required'),
+            iconUrl: Yup.string().required('Required'),
+            description: Yup.string().required('Required'),
+            twitter: Yup.string(),
+            website: Yup.string(),
+            behavior: Yup.string().required('Required'),
+            paymentAmount: Yup.number().required('Required').positive().integer(),
+        }),
+        onSubmit: handleSubmit,
+    });
+
+    // Wait for transaction confirmation
+    const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+        hash: transactionHash || undefined, // Ensure hash is defined
+    })
 
     const uploadFile = async (file: File) => {
         try {
-            setUploading(true)
+            // setUploading(true)
             const data = new FormData()
             data.set("file", file)
             const uploadRequest = await fetch("/api/pinata", {
@@ -83,16 +100,13 @@ export default function CreateAgent() {
             })
             const ipfsUrl = await uploadRequest.json()
 
-            setFormData(prev => ({
-                ...prev,
-                imageUrl: ipfsUrl
-            }))
-            setUploading(false)
+            formik.setFieldValue('iconUrl', ipfsUrl) // Update the iconUrl in formik state
+            // setUploading(false)
             console.log("ipfsUrl", ipfsUrl)
             return ipfsUrl
         } catch (e) {
             console.error(e)
-            setUploading(false)
+            // setUploading(false)
             alert("Error uploading file")
             return null
         }
@@ -104,14 +118,22 @@ export default function CreateAgent() {
             // Show preview
             const reader = new FileReader()
             reader.onloadend = () => {
-                setFormData(prev => ({
-                    ...prev,
-                    image: file,
-                    imagePreview: reader.result as string
-                }))
+                setImagePreview(reader.result as string) // Update imagePreview state
+                formik.setFieldValue('image', file) // Update image in formik state
             }
             reader.readAsDataURL(file)
+            await uploadFile(file) // Call uploadFile to upload the image
         }
+    }
+
+    if (!isConnected) {
+        return (
+            <div className="h-screen flex flex-col items-center justify-center">
+                <h1 className="text-3xl font-bold mb-8 text-[#e879f9]">Connect Your Wallet</h1>
+                <p className="text-gray-400 mb-8">Please connect your wallet to create an agent</p>
+                <WalletButton />
+            </div>
+        )
     }
 
     const steps = [
@@ -129,79 +151,6 @@ export default function CreateAgent() {
     const prevStep = () => {
         if (currentStep > 0) {
             setCurrentStep(prev => prev - 1)
-        }
-    }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
-
-    const validateRequiredFields = () => {
-        return (
-            formData.name.trim() !== '' &&
-            formData.ticker.trim() !== '' &&
-            formData.description.trim() !== '' &&
-            formData.behavior.trim() !== '' &&
-            formData.image !== null
-        )
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        if (currentStep !== steps.length - 1) {
-            nextStep()
-            return
-        }
-
-        if (!validateRequiredFields()) {
-            alert('Please fill in all required fields (Image, Name, Ticker, Description, and Behavior)')
-            return
-        }
-
-        try {
-            // Upload image first
-            let ipfsUrl = formData.imageUrl
-            if (formData.image && !ipfsUrl) {
-                ipfsUrl = await uploadFile(formData.image)
-                if (!ipfsUrl) {
-                    alert('Failed to upload image')
-                    return
-                }
-            }
-
-            // Approve IDLE first
-            try {
-                const approveHash = await writeContractAsync({
-                    address: IDLE_TOKEN_ADDRESS,
-                    abi: ERC20_ABI,
-                    functionName: "approve",
-                    args: [FACTORY_EXCHANGE_ADDRESS, parseUnits("10", 18)],
-                    account: address,
-                });
-
-
-                // Wait for approval transaction to complete
-                await waitForTransactionReceipt(RainbowKitconfig, { hash: approveHash })
-
-                // Then create token with image URL
-                const createResult = await writeContractAsync({
-                    abi: FACTORY_EXCHANGE_ABI,
-                    address: FACTORY_EXCHANGE_ADDRESS,
-                    functionName: "createToken",
-                    args: [formData.name, formData.ticker, parseUnits("10", 18), ipfsUrl, formData.description, formData.behavior],
-                    account: address,
-                    // gas: parseUnits("1000000", 0),
-                })
-
-                await waitForTransactionReceipt(RainbowKitconfig, { hash: createResult })
-            } catch (error) {
-                console.error('Transaction failed:', error)
-                throw error
-            }
-        } catch (error) {
-            console.error('Transaction failed:', error)
-            alert('Transaction failed: ' + (error instanceof Error ? error.message : 'Unknown error'))
         }
     }
 
@@ -233,20 +182,11 @@ export default function CreateAgent() {
                         <h1 className='text-2xl font-bold uppercase text-[#e879f9]'>Agent Details</h1>
                         <div>
                             <p className={`${Number(balanceIdleToken) > 0 ? "text-green-500" : "text-red-500"}`}>{Number(balanceIdleToken) > 0 ? "You are Eligible to Create an AI Agent." : "Please buy IDLE tokens first to create an agent."}</p>
-                            <span className='text-sm text-muted-foreground'>{Number(balanceIdleToken).toLocaleString()} IDLE</span>
+                            <span className='text-sm text-muted-foreground'>{(Number(balanceIdleToken) / 1e18).toFixed(0)} IDLE</span>
                         </div>
                         <div className='space-y-2'>
                             <Label htmlFor="image">Agent Image</Label>
                             <div className='flex items-center gap-5'>
-                                {formData.imagePreview && (
-                                    <Image
-                                        src={formData.imagePreview}
-                                        alt="Preview"
-                                        width={100}
-                                        height={100}
-                                        className='rounded-lg object-cover aspect-square'
-                                    />
-                                )}
                                 <Input
                                     id="image"
                                     name="image"
@@ -257,14 +197,24 @@ export default function CreateAgent() {
                                     required
                                 />
                             </div>
+                            {imagePreview && (
+                                <Image
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    width={150}
+                                    height={150}
+                                    className='rounded-lg object-cover aspect-square'
+                                />
+                            )}
                         </div>
                         <div className='space-y-2'>
                             <Label htmlFor="name">Agent Name</Label>
                             <Input
                                 id="name"
                                 name="name"
-                                value={formData.name}
-                                onChange={handleChange}
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 type="text"
                                 placeholder='example: "The Crypto Agent"'
                                 className='rounded duration-200 ease-in-out'
@@ -276,8 +226,9 @@ export default function CreateAgent() {
                             <Input
                                 id="ticker"
                                 name="ticker"
-                                value={formData.ticker}
-                                onChange={handleChange}
+                                value={formik.values.ticker}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 type="text"
                                 placeholder='example: "CRYPTO"'
                                 className='rounded duration-200 ease-in-out'
@@ -289,8 +240,9 @@ export default function CreateAgent() {
                             <Textarea
                                 id="description"
                                 name="description"
-                                value={formData.description}
-                                onChange={handleChange}
+                                value={formik.values.description}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 className='resize-none rounded duration-200 ease-in-out'
                                 rows={5}
                                 placeholder='example: "The Crypto Agent is a bot that tweets about crypto"'
@@ -315,43 +267,23 @@ export default function CreateAgent() {
                             <Label>X or Twitter Link (optional)</Label>
                             <Input
                                 name="twitter"
-                                value={formData.twitter}
-                                onChange={handleChange}
+                                value={formik.values.twitter}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 type="text"
                                 placeholder='example: "https://x.com/TheCryptoAgent"'
                                 className='rounded duration-200 ease-in-out'
                             />
                         </div>
                         <div className='space-y-2'>
-                            <Label>Telegram Link (optional)</Label>
-                            <Input
-                                name="telegram"
-                                value={formData.telegram}
-                                onChange={handleChange}
-                                type="text"
-                                placeholder='example: "https://t.me/TheCryptoAgent"'
-                                className='rounded duration-200 ease-in-out'
-                            />
-                        </div>
-                        <div className='space-y-2'>
                             <Label>Website Link (optional)</Label>
                             <Input
-                                name="website"
-                                value={formData.website}
-                                onChange={handleChange}
+                                name="website" // Corrected from telegram to website
+                                value={formik.values.website}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 type="text"
-                                placeholder='example: "https://thecryptoa.com"'
-                                className='rounded duration-200 ease-in-out'
-                            />
-                        </div>
-                        <div className='space-y-2'>
-                            <Label>Discord Link (optional)</Label>
-                            <Input
-                                name="discord"
-                                value={formData.discord}
-                                onChange={handleChange}
-                                type="text"
-                                placeholder='example: "https://discord.com/invite/TheCryptoAgent"'
+                                placeholder='example: "https://website.com/TheCryptoAgent"'
                                 className='rounded duration-200 ease-in-out'
                             />
                         </div>
@@ -374,13 +306,31 @@ export default function CreateAgent() {
                             <Textarea
                                 id="behavior"
                                 name="behavior"
-                                value={formData.behavior}
-                                onChange={handleChange}
+                                value={formik.values.behavior}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 placeholder='example: "Always talks like a boss. drops a slang and crypto buzzwords nonstop..."'
                                 className='resize-none rounded duration-200 ease-in-out'
                                 rows={5}
                                 required
                             />
+                        </div>
+
+                        <div className='space-y-2 w-fit'>
+                            <Label htmlFor="paymentAmount">IDLE Amount</Label>
+                            <div className='flex items-center relative'>
+                                <Input
+                                    id="paymentAmount" // Added id for the input
+                                    name="paymentAmount" // Added name for the input
+                                    value={formik.values.paymentAmount} // Bind value to formik
+                                    onChange={formik.handleChange} // Handle change
+                                    onBlur={formik.handleBlur} // Handle blur
+                                    placeholder='example: 10'
+                                    className='resize-none rounded duration-200 ease-in-out'
+                                    required
+                                />
+                                <span className='absolute right-1 bg-secondary p-1 px-3 rounded text-primary'>IDLE</span>
+                            </div>
                         </div>
                     </motion.section>
                 )}
@@ -389,11 +339,11 @@ export default function CreateAgent() {
     }
 
     return (
-        <main className='bg-radial from-[#4a044e] to-black'>
+        <main className='bg-radial from-[#4a044e] to-black min-h-[calc(100vh-20vh)] flex items-center justify-center'>
             <motion.main
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className='max-w-xl mx-auto my-10 rounded p-5 bg-secondary'
+                className='rounded p-5 my-10 xl:w-1/3 2xl:w-1/4 bg-secondary'
             >
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -428,7 +378,7 @@ export default function CreateAgent() {
                 </motion.div>
 
                 <motion.form
-                    onSubmit={handleSubmit}
+                    onSubmit={formik.handleSubmit}
                     className='space-y-5'
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -450,11 +400,10 @@ export default function CreateAgent() {
 
                         <Button
                             type="submit"
+                            onClick={nextStep}
                             className='rounded font-bold uppercase'
                             disabled={
-                                (currentStep === steps.length - 1 &&
-                                    (isPending || !validateRequiredFields()))
-                                || isTransactionConfirming || isSuccessWriteContract
+                                (currentStep === steps.length - 1 && (isPending || isConfirming || isSuccess || isConfirmed))
                             }
                         >
                             {currentStep === steps.length - 1
@@ -464,22 +413,22 @@ export default function CreateAgent() {
                         </Button>
                     </div>
 
-                    <div className='grid place-content-center gap-5'>
-                        {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
+                    <div className='grid place-content-center gap-2'>
+                        {/* {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
                         {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
-                        {isTransactionConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>}
-                        {/* {!hash && <p className="text-center text-yellow-500">Transaction Hash: {hash}</p>} */}
-                        {isSuccessWriteContract && isTransferSuccess && <p className="text-center text-green-500">Agent Created Successfully!</p>}
-                        {isSuccessWriteContract && isTransferSuccess && hash && (
-                            <Button variant={'outline'} asChild>
-                                <Link target='_blank' href={`https://pacific-explorer.sepolia-testnet.manta.network/tx/${hash}`}>
-                                    View Transaction Details
-                                </Link>
+                        {isConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>} */}
+                        {/* {isError && <p className="text-center text-red-500">Error: {isError.message}</p>} */}
+                        {/* {isSuccess && isConfirmed && transactionHash && <div>Transaction Hash: {transactionHash}</div>} */}
+                        {isConfirming && <div>Waiting for confirmation...</div>}
+                        {isConfirmed && <p className='text-muted-foreground'>Transaction confirmed!</p>}
+                        {isConfirmed &&
+                            <Button asChild className='rounded'>
+                                <Link href={`https://pacific-explorer.sepolia-testnet.manta.network/tx/${transactionHash}`} target="_blank">View Transaction</Link>
                             </Button>
-                        )}
+                        }
                     </div>
                 </motion.form>
             </motion.main>
-        </main>
+        </main >
     )
 }
