@@ -34,7 +34,7 @@ export default function page() {
           <div className='border border-[#d946ef] text-center grid place-content-center place-items-center p-5 gap-3 py-5'>
             <h1 className='text-xl font-semibold'>Seamless Collaboration</h1>
             <p className='text-muted-foreground'>
-              Your AI agents can work together effortlessly. Whether it's managing tasks or trading on the blockchain, teamwork makes the dream work here.
+              Your AI agents can work together effortlessly. Whether its managing tasks or trading on the blockchain, teamwork makes the dream work here.
             </p>
           </div>
 
