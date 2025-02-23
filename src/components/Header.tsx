@@ -39,6 +39,13 @@ export default function Header() {
                     >
                         COMMUNITY
                     </Link>
+                    <Link
+                        href='https://bento.me/idle'
+                        target='_blank'
+                        className={'bg-[#86198f] px-5 py-2 rounded hover:bg-[#4a044e] hover:text-[#e879f9] duration-300 ease-in-out'}
+                    >
+                        GET $IDLE
+                    </Link>
                 </nav>
             </nav>
             <nav className={`${pathname === '/' ? 'justify-self-end' : 'hidden'}`}>
@@ -51,6 +58,6 @@ export default function Header() {
             <nav className={`${pathname === '/' ? 'hidden' : 'justify-self-end'}`}>
                 <WalletButton />
             </nav>
-        </header>
+        </header >
     )
 }

@@ -60,7 +60,7 @@ export default function AgentsCard() {
                     <SelectItem value="dark">Market Cap</SelectItem>
                 </SelectContent>
             </Select>
-            <div className='grid grid-cols-1 xl:grid-cols-4 2xl:grid-cols-5 gap-3'>
+            <div className='grid grid-cols-1 xl:grid-cols-4 2xl:grid-cols-5 gap-5'>
                 {sortedTokens?.map((token: Token, index: number) => {
                     return (
                         <Link href={`/agents/${token.tokenAddress}`} key={index}>
@@ -74,8 +74,10 @@ export default function AgentsCard() {
                                         priority={true}
                                         className='w-full aspect-square object-cover'
                                     />
-                                    <CardTitle>{token.name} <span className='text-xs text-muted-foreground'>${token.ticker}</span></CardTitle>
-                                    <CardDescription className='truncate lowercase'>{token.description}</CardDescription>
+                                    <div>
+                                        <CardTitle>{token.name} <span className='text-xs text-muted-foreground'>${token.ticker}</span></CardTitle>
+                                        <CardDescription className='truncate lowercase'>{token.description}</CardDescription>
+                                    </div>
                                 </CardHeader>
                                 <CardContent>
                                     <p className='text-xs text-muted-foreground'>MarketCap: <strong className='text-[#e879f9] text-sm'>$5.000</strong></p>

@@ -17,17 +17,11 @@ export function HookTypewriter() {
         },
         {
             text: "DEVELOPMENT",
-            className: "text-[#e879f9]",
+            className: "text-[#86198f]",
         },
     ];
 
     return (
-        <div className="flex flex-col items-center justify-center h-[40rem] gap-4">
-            <TypewriterEffectSmooth words={words} />
-            <p className="text-muted-foreground">Our AI AGENTS feature for <strong>STUDIO MODE</strong> is currently under development</p>
-            <div className="rounded-full bg-primary/50 cursor-not-allowed px-4 py-2">
-                AVAILABLE SOON
-            </div>
-        </div>
+        <TypewriterEffectSmooth words={words} />
     );
 }
