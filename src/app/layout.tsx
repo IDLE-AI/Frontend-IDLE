@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import { RainbowkitConfig } from "@/config/RainbowkitConfig";
+import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -34,6 +35,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </div>
+          <Toaster />
         </RainbowkitConfig>
       </body>
       <Script

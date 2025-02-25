@@ -8,6 +8,8 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from './ui/button';
+import { LoaderCircle, SendHorizontal } from 'lucide-react';
+import { useAccount } from 'wagmi';
 
 interface Token {
     name: string;
@@ -29,10 +31,12 @@ type Message = {
 }
 
 export default function AgentModal({ AgentData }: { AgentData: Token }) {
+    const { isConnected, isDisconnected } = useAccount()
     const [messages, setMessages] = useState<Message[]>([
         { role: "assistant", content: "Hello, how can I help you?" }
     ]);
     const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,6 +45,7 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
 
             try {
+                setLoading(true)
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
@@ -54,23 +59,27 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
                 } else {
                     throw new Error(data.error);
                 }
+                setLoading(false)
             } catch (error) {
                 console.error("Error fetching AI response:", error);
                 setMessages(prevMessages => [...prevMessages, { role: "assistant", content: "Sorry, I couldn't process your request." }]);
+                setInput("");
+                setLoading(false)
             } finally {
                 setInput("");
+                setLoading(false)
             }
         }
     }
-
     return (
         <Dialog>
             <DialogTrigger asChild>
-                {AgentData && (
+                {AgentData && isConnected && (
                     <Button className='w-full'>
                         Interact With {AgentData.name}
                     </Button>
                 )}
+                {/* {isDisconnected && <p>hai</p>} */}
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -93,9 +102,10 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Type your message..."
                         className="flex-grow p-2 border rounded-l-lg"
+                        disabled={loading}
                     />
-                    <Button type="submit" className="ml-2">
-                        Send
+                    <Button type="submit" className="ml-2" disabled={loading || input === ""}>
+                        {loading ? <LoaderCircle className='animate-spin' /> : <SendHorizontal />}
                     </Button>
                 </form>
             </DialogContent>
