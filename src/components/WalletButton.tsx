@@ -60,7 +60,7 @@ export default function WalletButton() {
                                 );
                             }
                             return (
-                                <div className='flex gap-5'>
+                                <div className='space-y-2'>
                                     {/* <Button
                                         onClick={openChainModal}
                                         style={{ display: 'flex', alignItems: 'center' }}
