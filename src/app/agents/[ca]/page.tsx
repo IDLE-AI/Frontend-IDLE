@@ -3,11 +3,11 @@ import React from 'react'
 import Image from 'next/image'
 import BuySell from '@/components/BuySell'
 import Transactions from './Transactions'
-import { Button } from '@/components/ui/button'
 import { useAccount, useReadContract } from 'wagmi'
 import { useParams } from 'next/navigation'
 import { FactoryTokenABI, FactoryTokenAddress } from '@/contracts/FactoryToken'
 import moment from 'moment'
+import AgentModal from '@/components/AgentModal'
 
 interface Token {
     name: string;
@@ -63,11 +63,7 @@ export default function Page() {
                                         <p className="text-sm truncate text-muted-foreground">created by: {AgentData.owner?.slice(0, 10)}...{AgentData.owner?.slice(-4)}</p>
                                         <p className="text-xs text-muted-foreground">Created at <span className='text-primary'>{moment(Number(AgentData.createdAt) * 1000).fromNow()}</span></p>
                                     </div>
-
-
-                                    <Button className='w-full'>
-                                        Interact with {AgentData.name}
-                                    </Button>
+                                    <AgentModal AgentData={AgentData} />
                                 </div>
                             </div>
 
