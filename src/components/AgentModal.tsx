@@ -31,9 +31,9 @@ type Message = {
 }
 
 export default function AgentModal({ AgentData }: { AgentData: Token }) {
-    const { isConnected, isDisconnected } = useAccount()
+    const { isConnected } = useAccount()
     const [messages, setMessages] = useState<Message[]>([
-        { role: "assistant", content: "Hello, how can I help you?" }
+        { role: "assistant", content: `Hello, how can ${AgentData.name} I help you?` }
     ]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false)
