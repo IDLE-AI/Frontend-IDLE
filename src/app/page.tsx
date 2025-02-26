@@ -4,11 +4,13 @@ import { ChartCandlestick, SendToBack, UserPlus } from 'lucide-react'
 import { Roadmap } from '@/components/Roadmap'
 import { ElizaParallax } from '@/components/ElizaParallax'
 import { Explore3DCard } from '@/components/Explore3DCard'
+import Hero2 from '@/components/Hero2'
 
-export default function page() {
+export default function Home() {
   return (
     <main className='space-y-40'>
-      <Hero />
+      {/* <Hero /> */}
+      <Hero2 />
       <section>
         <div className='space-y-2 text-center'>
           <p className='font text-[#e879f9]'>Universal Deployment AI Agents Platform</p>
