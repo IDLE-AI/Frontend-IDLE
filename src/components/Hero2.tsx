@@ -20,7 +20,7 @@ export default function Hero2() {
                     </div>
                     <hr className='border-[#d946ef]' />
                     <div className='flex gap-5 items-center'>
-                        <div className='w-4 h-4 bg-green-400 rounded-full animate-ping' />
+                        <div className='w-5 h-5 bg-green-400 rounded-full animate-pulse' />
                         <NetworkTest />
                         <span className='text-4xl'>NETWORK</span>
                     </div>
