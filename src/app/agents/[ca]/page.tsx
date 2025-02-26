@@ -37,6 +37,8 @@ export default function Page() {
         args: [ca]
     }) as { data: Token };
 
+    const [isCopied, setIsCopied] = React.useState(false)
+
     const copyTextToClipboard = () => {
         if (!navigator.clipboard) {
             toast("Clipboard API not available in your browser.");
@@ -46,14 +48,18 @@ export default function Page() {
         navigator.clipboard.writeText(AgentData.tokenAddress)
             .then(() => {
                 // alert();
+                setIsCopied(true)
                 toast("Content copied to clipboard!")
+                setIsCopied(false)
             })
             .catch(err => {
                 console.error("Failed to copy text: ", err);
                 // alert("Failed to copy content to clipboard. Please try again.");
+                setIsCopied(true)
                 toast("Failed to copy content to clipboard. Please try again.", {
                     description: err
                 })
+                setIsCopied(false)
             });
     };
 

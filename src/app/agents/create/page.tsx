@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useState } from 'react'
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, LoaderCircle } from 'lucide-react'
 import Image from 'next/image'
 import WalletButton from '@/components/WalletButton'
 import Link from 'next/link'
@@ -343,7 +343,7 @@ export default function CreateAgent() {
             <motion.main
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className='rounded p-5 my-10 xl:w-1/3 2xl:w-1/4 bg-secondary'
+                className='rounded p-5 my-10 xl:w-1/3 2xl:w-1/4 bg-secondary/60'
             >
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -407,7 +407,12 @@ export default function CreateAgent() {
                             }
                         >
                             {currentStep === steps.length - 1
-                                ? (isPending ? 'Creating Agent...' : 'Create Agent')
+                                ? (isPending || isConfirming ?
+                                    <div className='flex items-center gap-2'>
+                                        <span>Creating Agent</span>
+                                        <LoaderCircle className='animate-spin' />
+                                    </div>
+                                    : 'Create Agent')
                                 : 'Next'
                             }
                         </Button>
@@ -415,14 +420,14 @@ export default function CreateAgent() {
 
                     <div className='grid place-content-center gap-2'>
                         {/* {uploading && <p className="text-center text-yellow-500">Uploading data...</p>}
-                        {isPending && <p className="text-center text-yellow-500">Transaction Pending...</p>}
                         {isConfirming && <p className="text-center text-yellow-500">Transaction Confirming...</p>} */}
                         {/* {isError && <p className="text-center text-red-500">Error: {isError.message}</p>} */}
                         {/* {isSuccess && isConfirmed && transactionHash && <div>Transaction Hash: {transactionHash}</div>} */}
-                        {isConfirming && <div>Waiting for confirmation...</div>}
-                        {isConfirmed && <p className='text-muted-foreground'>Transaction confirmed!</p>}
+                        {/* {isPending && <p className="text-center text-sm text-yellow-500">Transaction Pending...</p>} */}
+                        {isConfirming && <p className='text-sm text-muted-foreground'>Creating your AI AGENT...</p>}
+                        {isConfirmed && <p className='text-muted-foreground'>Creating AI Success!</p>}
                         {isConfirmed &&
-                            <Button asChild className='rounded'>
+                            <Button asChild className='rounded' variant={'outline'}>
                                 <Link href={`https://pacific-explorer.sepolia-testnet.manta.network/tx/${transactionHash}`} target="_blank">View Transaction</Link>
                             </Button>
                         }
