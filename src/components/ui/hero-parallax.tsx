@@ -104,7 +104,7 @@ export const HeroParallax = ({
 export const Header = () => {
   return (
     <div className="px-40 relative mx-auto py-20 md:py-40 w-full  left-0 top-0">
-      <p className='text-[#e879f9] font-bold uppercase'>Development tools</p>
+      <p className='text-[#d946ef] font-bold uppercase'>Development tools</p>
       <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
         AI Acceleration Tools
       </h1>

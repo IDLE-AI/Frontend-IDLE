@@ -40,7 +40,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
         <h2 className="text-lg md:text-4xl xl:text-5xl mb-4 max-w-4xl font-bold uppercase">
           Roadmap of IDLE AI
         </h2>
-        <p className=" text-sm md:text-base max-w-sm">
+        <p className=" text-xl text-[#d946ef]">
           IDLE AI is a protocol for building, deploying, and managing autonomous AI agents on Manta Network.
         </p>
       </div>

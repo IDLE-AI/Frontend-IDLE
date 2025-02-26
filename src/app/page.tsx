@@ -13,7 +13,7 @@ export default function Home() {
       <Hero2 />
       <section>
         <div className='space-y-2 text-center'>
-          <p className='font text-[#e879f9]'>Universal Deployment AI Agents Platform</p>
+          <p className='font text-[#d946ef]'>Universal Deployment AI Agents Platform</p>
           <h1 className='text-4xl font-bold'>One Solution, Endless Possibilities The Power to Unite All in One</h1>
         </div>
         <Explore3DCard />
@@ -55,28 +55,28 @@ export default function Home() {
 
       <section className='space-y-5 xl:mx-40 2xl:mx-60 grid grid-cols-2 gap-10 items-center'>
         <div className='space-y-2 '>
-          <p className='text-[#e879f9]'>BUILD. DEPLOY. TRADE. INTERACT.</p>
+          <p className='text-[#d946ef]'>BUILD. DEPLOY. TRADE. INTERACT.</p>
           <h1 className='text-5xl font-bold'>The Home of AI AGENTS</h1>
         </div>
 
         <div className='grid grid-cols-2 gap-10'>
           <div className='space-y-2'>
-            <UserPlus className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
+            <UserPlus className='bg-[#d946ef] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>Build</h1>
             <p className='text-muted-foreground'>Build your own agents with the IDLE AI on ElizaOS Framework</p>
           </div>
           <div className='space-y-2'>
-            <SendToBack className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
+            <SendToBack className='bg-[#d946ef] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>DEPLOY</h1>
             <p className='text-muted-foreground'>Deploy your personal AI Agents</p>
           </div>
           <div className='space-y-2 '>
-            <ChartCandlestick className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
+            <ChartCandlestick className='bg-[#d946ef] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>TRADE</h1>
             <p className='text-muted-foreground'>Everyone can trade your personal AI agents.</p>
           </div>
           <div className='space-y-2'>
-            <UserPlus className='bg-[#e879f9] text-primary-foreground rounded p-1 w-7 h-7' />
+            <UserPlus className='bg-[#d946ef] text-primary-foreground rounded p-1 w-7 h-7' />
             <h1 className='text-2xl font-bold uppercase'>Interact</h1>
             <p className='text-muted-foreground'>Everyone can interact with your personal AI agents.</p>
           </div>
