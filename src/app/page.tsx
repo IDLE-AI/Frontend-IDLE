@@ -1,4 +1,4 @@
-import Hero from '@/components/Hero'
+// import Hero from '@/components/Hero'
 import React from 'react'
 import { ChartCandlestick, SendToBack, UserPlus } from 'lucide-react'
 import { Roadmap } from '@/components/Roadmap'
