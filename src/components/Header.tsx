@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import WalletButton from "./WalletButton";
-import { BookOpen, Earth } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 export default function Header() {
   const pathname = usePathname();
