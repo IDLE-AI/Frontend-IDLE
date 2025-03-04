@@ -34,7 +34,7 @@ type Message = {
 };
 
 export default function AgentModal({ AgentData }: { AgentData: Token }) {
-  const { address, isConnected, isDisconnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const [messages, setMessages] = React.useState<Message[]>([
     {
       role: "assistant",
