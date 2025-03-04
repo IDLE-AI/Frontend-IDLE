@@ -71,11 +71,7 @@ export const HeroParallax = ({
       >
         <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
           {firstRow.map((product, index) => (
-            <ProductCard
-              product={product}
-              translate={translateX}
-              key={index}
-            />
+            <ProductCard product={product} translate={translateX} key={index} />
           ))}
         </motion.div>
         <motion.div className="flex flex-row  mb-20 space-x-20 ">
@@ -89,11 +85,7 @@ export const HeroParallax = ({
         </motion.div>
         <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
           {thirdRow.map((product, index) => (
-            <ProductCard
-              product={product}
-              translate={translateX}
-              key={index}
-            />
+            <ProductCard product={product} translate={translateX} key={index} />
           ))}
         </motion.div>
       </motion.div>
@@ -104,12 +96,15 @@ export const HeroParallax = ({
 export const Header = () => {
   return (
     <div className="px-40 relative mx-auto py-20 md:py-40 w-full  left-0 top-0">
-      <p className='text-[#d946ef] font-bold uppercase'>Development tools</p>
+      <p className="text-muted-foreground font-bold uppercase">
+        Development tools
+      </p>
       <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
         AI Acceleration Tools
       </h1>
       <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-        All-in-One Development Suite for Building, Deploying, and Managing <strong>AI Agents on Manta Network using ElizaOS Framework</strong>.
+        All-in-One Development Suite for Building, Deploying, and Managing{" "}
+        <strong>AI Agents on Manta Network using ElizaOS Framework</strong>.
       </p>
     </div>
   );

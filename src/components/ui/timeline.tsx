@@ -1,9 +1,5 @@
 "use client";
-import {
-  useScroll,
-  useTransform,
-  motion,
-} from "framer-motion";
+import { useScroll, useTransform, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
 interface TimelineEntry {
@@ -25,23 +21,21 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 10%", "end 50%"],
+    offset: ["start 10%", "end 90%"],
   });
 
   const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
   const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
   return (
-    <div
-      className="w-full bg-linear-to-b from-transparent to-[#4a044e] md:px-10"
-      ref={containerRef}
-    >
+    <div className="w-full md:px-10" ref={containerRef}>
       <div className="max-w-7xl mx-auto py-10">
         <h2 className="text-lg md:text-4xl xl:text-5xl mb-4 max-w-4xl font-bold uppercase">
           Roadmap of IDLE AI
         </h2>
-        <p className=" text-xl text-[#d946ef]">
-          IDLE AI is a protocol for building, deploying, and managing autonomous AI agents on Manta Network.
+        <p className=" text-xl text-muted-foreground">
+          IDLE AI is a protocol for building, deploying, and managing autonomous
+          AI agents on Manta Network.
         </p>
       </div>
 
@@ -79,7 +73,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
               height: heightTransform,
               opacity: opacityTransform,
             }}
-            className="absolute inset-x-0 top-0 w-[2px] bg-linear-to-t from-purple-500 via-[#e879f9] to-transparent from-0% via-10% rounded-full"
+            className="absolute inset-x-0 top-0 w-[2px] bg-linear-to-t from-primary via-primary to-transparent from-0% via-10% rounded-full"
           />
         </div>
       </div>
