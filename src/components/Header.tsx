@@ -59,7 +59,7 @@ export default function Header() {
       <nav className={`${pathname === "/" ? "ml-auto" : "hidden"}`}>
         <div>
           <Link
-            href={"https://amelias-organization-20.gitbook.io/idle"}
+            href={"https://0xkayz.gitbook.io/idle-technical-paper"}
             target="_blank"
             className="flex items-center gap-2"
           >
