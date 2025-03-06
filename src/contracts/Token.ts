@@ -1,4 +1,5 @@
 export const TokenAddress = '0xdBFFbFE94E21Ab4ff2397f4425511f6e1908625D'
+export const TokenAddressSonic = '0x1CA16cb7E040b4a2c1BA7B44bc508776e348EF9d'
 
 export const TokenABI = [
     {

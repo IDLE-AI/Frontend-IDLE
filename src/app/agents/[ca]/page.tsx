@@ -3,13 +3,18 @@ import React from "react";
 import Image from "next/image";
 import BuySell from "@/components/BuySell";
 import Transactions from "./Transactions";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useChainId, useReadContract } from "wagmi";
 import { useParams } from "next/navigation";
-import { FactoryTokenABI, FactoryTokenAddress } from "@/contracts/FactoryToken";
+import {
+  FactoryTokenABI,
+  FactoryTokenAddress,
+  FactoryTokenAddressSonic,
+} from "@/contracts/FactoryToken";
 import moment from "moment";
 import AgentModal from "@/components/AgentModal";
 import { BondingProggress } from "@/components/BondingProggress";
 import { toast } from "sonner";
+import { ChainConfig } from "@/config/RainbowkitConfig";
 
 interface Token {
   name: string;
@@ -28,8 +33,13 @@ interface Token {
 export default function Page() {
   const { ca } = useParams();
   const { isConnected } = useAccount();
+  const chain = useChainId();
+  const chainId = ChainConfig.chains.find((c) => c.id === chain)?.id;
+  const chainName = ChainConfig.chains.find((c) => c.id === chain)?.name;
+
   const { data: AgentData } = useReadContract({
-    address: FactoryTokenAddress,
+    address:
+      chainId === 3441006 ? FactoryTokenAddress : FactoryTokenAddressSonic,
     abi: FactoryTokenABI,
     functionName: "getTokenByAddress",
     args: [ca],
@@ -55,6 +65,21 @@ export default function Page() {
         });
       });
   };
+
+  if (AgentData?.owner === "0x0000000000000000000000000000000000000000") {
+    return (
+      <div className="h-[calc(100vh-20vh)] flex flex-col items-center justify-center gap-5">
+        <div className="text-center">
+          <h1 className="text-3xl font-semibold">Change Others Network</h1>
+          <p className="text-gray-400 font-light">
+            you are in <strong>{chainName}</strong> Network
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  console.log(AgentData);
 
   return (
     <main className="xl:m-5 space-y-5 xl:mx-10 2xl:mx-40">

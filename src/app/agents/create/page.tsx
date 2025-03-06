@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import {
   useAccount,
+  useChainId,
   useReadContract,
   useWaitForTransactionReceipt,
   useWriteContract,
@@ -15,11 +16,16 @@ import { ArrowLeft, LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import WalletButton from "@/components/WalletButton";
 import Link from "next/link";
-import { TokenABI, TokenAddress } from "@/contracts/Token";
+import { TokenABI, TokenAddress, TokenAddressSonic } from "@/contracts/Token";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FactoryTokenABI, FactoryTokenAddress } from "@/contracts/FactoryToken";
+import {
+  FactoryTokenABI,
+  FactoryTokenAddress,
+  FactoryTokenAddressSonic,
+} from "@/contracts/FactoryToken";
 import { parseUnits } from "viem";
+import { ChainConfig } from "@/config/RainbowkitConfig";
 
 const steps = [
   { title: "Agent Details", component: "details" },
@@ -41,8 +47,18 @@ const pageTransition = {
 
 export default function CreateAgent() {
   const { address, isConnected } = useAccount();
+  const chain = useChainId();
+  const chainId = ChainConfig.chains.find((c) => c.id === chain)?.id;
+
   const { data: balanceIdleToken } = useReadContract({
     address: TokenAddress,
+    abi: TokenABI,
+    functionName: "balanceOf",
+    args: [address],
+  });
+
+  const { data: balanceIdleTokenSonic } = useReadContract({
+    address: TokenAddressSonic,
     abi: TokenABI,
     functionName: "balanceOf",
     args: [address],
@@ -59,38 +75,76 @@ export default function CreateAgent() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    try {
-      const approvalTx = await writeContract({
-        address: TokenAddress,
-        abi: TokenABI,
-        functionName: "approve",
-        args: [
-          FactoryTokenAddress,
-          parseUnits(formik.values.paymentAmount.toString(), 18),
-        ],
-      });
+    if (chainId === 3441006) {
+      try {
+        const approvalTx = await writeContract({
+          address: TokenAddress,
+          abi: TokenABI,
+          functionName: "approve",
+          args: [
+            FactoryTokenAddress,
+            parseUnits(formik.values.paymentAmount.toString(), 18),
+          ],
+        });
 
-      const createTokenTx = await writeContract({
-        address: FactoryTokenAddress,
-        abi: FactoryTokenABI,
-        functionName: "createTokenWithPayment",
-        args: [
-          formik.values.name,
-          formik.values.ticker,
-          formik.values.iconUrl,
-          formik.values.description,
-          formik.values.twitter,
-          formik.values.website,
-          formik.values.behavior,
-          parseUnits(formik.values.paymentAmount.toString(), 18),
-        ],
-      });
+        const createTokenTx = await writeContract({
+          address: TokenAddress,
+          abi: FactoryTokenABI,
+          functionName: "createTokenWithPayment",
+          args: [
+            formik.values.name,
+            formik.values.ticker,
+            formik.values.iconUrl,
+            formik.values.description,
+            formik.values.twitter,
+            formik.values.website,
+            formik.values.behavior,
+            parseUnits(formik.values.paymentAmount.toString(), 18),
+          ],
+        });
 
-      console.log("Approval Transaction:", approvalTx);
-      console.log("Create Token Transaction:", createTokenTx);
-    } catch (error) {
-      console.error("Transaction failed:", error);
-      alert("Transaction failed. Please try again.");
+        console.log("Approval Transaction:", approvalTx);
+        console.log("Create Token Transaction:", createTokenTx);
+      } catch (error) {
+        console.error("Transaction failed:", error);
+        alert("Transaction failed. Please try again.");
+      }
+    }
+
+    if (chainId === 57054) {
+      try {
+        const approvalTx = await writeContract({
+          address: TokenAddressSonic,
+          abi: TokenABI,
+          functionName: "approve",
+          args: [
+            FactoryTokenAddressSonic,
+            parseUnits(formik.values.paymentAmount.toString(), 18),
+          ],
+        });
+
+        const createTokenTx = await writeContract({
+          address: FactoryTokenAddressSonic,
+          abi: FactoryTokenABI,
+          functionName: "createTokenWithPayment",
+          args: [
+            formik.values.name,
+            formik.values.ticker,
+            formik.values.iconUrl,
+            formik.values.description,
+            formik.values.twitter,
+            formik.values.website,
+            formik.values.behavior,
+            parseUnits(formik.values.paymentAmount.toString(), 18),
+          ],
+        });
+
+        console.log("Approval Transaction:", approvalTx);
+        console.log("Create Token Transaction:", createTokenTx);
+      } catch (error) {
+        console.error("Transaction failed:", error);
+        alert("Transaction failed. Please try again.");
+      }
     }
   };
 
@@ -115,6 +169,7 @@ export default function CreateAgent() {
       iconUrl: Yup.string().required("Required"),
       description: Yup.string().required("Required"),
       twitter: Yup.string(),
+      website: Yup.string(),
       paymentAmount: Yup.number().required("Required").positive().integer(),
       chatStyle: Yup.string().required("Required"),
       topics: Yup.string().required("Required"),
@@ -155,7 +210,7 @@ export default function CreateAgent() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
-        formik.setFieldValue("image", file);
+        formik.setFieldValue("file", file);
       };
       reader.readAsDataURL(file);
       await uploadFile(file);
@@ -164,7 +219,7 @@ export default function CreateAgent() {
 
   if (!isConnected) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center gap-5">
+      <div className="h-[calc(100vh-20vh)] flex flex-col items-center justify-center gap-5">
         <div className="text-center">
           <h1 className="text-3xl font-semibold">Connect Your Wallet</h1>
           <p className="text-gray-400 font-light">
@@ -213,17 +268,21 @@ export default function CreateAgent() {
               <div className="text-end">
                 <p
                   className={`${
-                    Number(balanceIdleToken) > 0
+                    Number(balanceIdleToken || balanceIdleTokenSonic) > 0
                       ? "text-green-500 text-sm"
                       : "text-red-500 text-sm"
                   }`}
                 >
-                  {Number(balanceIdleToken) > 0
+                  {Number(balanceIdleToken || balanceIdleTokenSonic) > 0
                     ? "Eligible to create an AI AGENT"
                     : "Please buy IDLE tokens."}
                 </p>
                 <span className="text-sm text-muted-foreground">
-                  balance: {(Number(balanceIdleToken) / 1e18).toFixed(0)} IDLE
+                  balance:{" "}
+                  {(
+                    Number(balanceIdleToken || balanceIdleTokenSonic) / 1e18
+                  ).toFixed(0)}{" "}
+                  IDLE
                 </span>
               </div>
             </div>
@@ -532,20 +591,31 @@ export default function CreateAgent() {
 
           <div className="grid place-content-center gap-2">
             {isConfirming && (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground text-center">
                 Creating your AI AGENT...
               </p>
             )}
             {isConfirmed && (
               <p className="text-muted-foreground">Creating AI Success!</p>
             )}
-            {isConfirmed && (
+            {chainId === 3441006 && isConfirmed && (
               <Button asChild className="rounded" variant={"outline"}>
                 <Link
                   href={`https://pacific-explorer.sepolia-testnet.manta.network/tx/${transactionHash}`}
                   target="_blank"
                 >
-                  View Transaction
+                  View Transaction Manta Explorer
+                </Link>
+              </Button>
+            )}
+
+            {chainId === 57054 && isConfirmed && (
+              <Button asChild className="rounded" variant={"outline"}>
+                <Link
+                  href={`https://testnet.sonicscan.org/tx/${transactionHash}`}
+                  target="_blank"
+                >
+                  View Transaction Sonic Explorer
                 </Link>
               </Button>
             )}

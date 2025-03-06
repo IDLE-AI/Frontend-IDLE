@@ -131,10 +131,10 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
             <div className="grid" key={index}>
               <p
                 key={index}
-                className={`my-2 p-2 rounded font-light text-sm break-all flex items-center gap-2 ${
+                className={`my-2 p-2 rounded font-light text-sm max-w-prose break-all flex items-center gap-2 ${
                   msg.role === "user"
-                    ? " bg-primary text-secondary place-self-end max-w-sm"
-                    : "bg-secondary place-self-start max-w-sm"
+                    ? " bg-primary text-secondary place-self-end"
+                    : "bg-secondary place-self-start"
                 }`}
               >
                 {msg.role === "assistant" && (

@@ -8,18 +8,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useReadContract } from "wagmi";
-import { FactoryTokenABI, FactoryTokenAddress } from "@/contracts/FactoryToken";
+import { useAccount, useChainId, useReadContract } from "wagmi";
+import {
+  FactoryTokenABI,
+  FactoryTokenAddress,
+  FactoryTokenAddressSonic,
+} from "@/contracts/FactoryToken";
 import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+import { ChainConfig } from "@/config/RainbowkitConfig";
+import { Badge } from "@/components/ui/badge";
 
 // Define the Token interface
 interface Token {
@@ -37,21 +43,33 @@ interface Token {
 }
 
 export default function AgentsCard() {
+  const { isDisconnected } = useAccount();
+  const chain = useChainId();
   // Specify the type of AgentData
   const { data: AgentData } = useReadContract({
     address: FactoryTokenAddress,
     abi: FactoryTokenABI,
     functionName: "getAllTokens",
+    chainId: chain,
   }) as { data: Token[] };
 
-  // Sort the tokens by createdAt in descending order
-  const sortedTokens = AgentData?.sort((a, b) => {
+  const { data: AgentDataSonic } = useReadContract({
+    address: FactoryTokenAddressSonic,
+    abi: FactoryTokenABI,
+    functionName: "getAllTokens",
+    chainId: chain,
+  }) as { data: Token[] };
+
+  const mergedTokens = [...(AgentData || []), ...(AgentDataSonic || [])];
+  const sortedTokens = mergedTokens.sort((a, b) => {
     return Number(b.createdAt) - Number(a.createdAt);
   });
 
+  const chainName = ChainConfig.chains.find((c) => c.id === chain)?.name;
+  console.log(chain);
   return (
     <section className="space-y-5">
-      <Select>
+      {/* <Select>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Featured" />
         </SelectTrigger>
@@ -59,7 +77,12 @@ export default function AgentsCard() {
           <SelectItem value="light">Creation Time</SelectItem>
           <SelectItem value="dark">Market Cap</SelectItem>
         </SelectContent>
-      </Select>
+      </Select> */}
+      {isDisconnected && (
+        <p className="text-muted-foreground text-center">
+          <strong>Connect Wallet</strong> to change others Network
+        </p>
+      )}
       <div className="grid grid-cols-1 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
         {sortedTokens?.map((token: Token, index: number) => {
           return (
@@ -74,12 +97,29 @@ export default function AgentsCard() {
                     priority={true}
                     className="w-full aspect-square rounded object-cover"
                   />
+                  {chainName && (
+                    <Badge variant="outline">
+                      <Image
+                        src={
+                          chain === 3441006
+                            ? "/images/manta.png"
+                            : "/images/sonic-logo.png"
+                        }
+                        width={20}
+                        height={20}
+                        alt={chainName}
+                        priority={true}
+                        className="bg-primary rounded-full"
+                      />
+                      <p className="text-xs font-light">{chainName}</p>
+                    </Badge>
+                  )}
                   <div>
-                    <CardTitle>
-                      {token.name}{" "}
-                      <span className="text-xs text-muted-foreground font-light">
+                    <CardTitle className="">
+                      <p>{token.name}</p>
+                      <p className="text-sm text-muted-foreground f">
                         ${token.ticker}
-                      </span>
+                      </p>
                     </CardTitle>
                     <CardDescription className="truncate lowercase font-normal">
                       {token.description}

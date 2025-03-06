@@ -1,9 +1,7 @@
 "use client";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "@/components/ui/button";
-import { Circle, Wallet } from "lucide-react";
-import Image from "next/image";
-// import Link from 'next/link';
+import { Wallet } from "lucide-react";
 
 export default function WalletButton() {
   return (
@@ -64,38 +62,43 @@ export default function WalletButton() {
                 );
               }
               return (
-                <div className="space-y-2">
-                  {/* <Button
-                                        onClick={openChainModal}
-                                        style={{ display: 'flex', alignItems: 'center' }}
-                                        type="button"
-                                        variant={'ghost'}
-                                        className='rounded font-bold'
-                                        size={'lg'}
-                                        disabled={true}
-                                    >
-                                        {chain.hasIcon && (
-                                            <div
-                                                style={{
-                                                    background: chain.iconBackground,
-                                                    width: 20,
-                                                    height: 20,
-                                                    borderRadius: 999,
-                                                    overflow: 'hidden',
-                                                    marginRight: 4,
-                                                }}
-                                            >
-                                                {chain.iconUrl && (
-                                                    <img
-                                                        alt={chain.name ?? 'Chain icon'}
-                                                        src={chain.iconUrl}
-                                                        style={{ width: 20, height: 20 }}
-                                                    />
-                                                )}
-                                            </div>
-                                        )}
-                                    </Button> */}
-                  {chain.hasIcon && (
+                <div className="space-y-2 flex gap-5">
+                  <Button
+                    onClick={openChainModal}
+                    style={{ display: "flex", alignItems: "center" }}
+                    type="button"
+                    variant={"ghost"}
+                    className="rounded font-bold"
+                    // size={"lg"}
+                    disabled={false}
+                  >
+                    {chain.hasIcon && (
+                      <div
+                        style={{
+                          background: chain.iconBackground,
+                          width: 20,
+                          height: 20,
+                          borderRadius: 999,
+                          overflow: "hidden",
+                          marginRight: 4,
+                        }}
+                      >
+                        {chain.iconUrl && (
+                          <img
+                            alt={chain.name ?? "Chain icon"}
+                            src={chain.iconUrl}
+                            style={{ width: 20, height: 20 }}
+                          />
+                        )}
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1">
+                      <p className="text-sm font-normal text-muted-foreground">
+                        {chain.name}
+                      </p>
+                    </div>
+                  </Button>
+                  {/* {chain.hasIcon && (
                     <div className="flex items-center gap-1">
                       <div
                         style={{
@@ -129,7 +132,7 @@ export default function WalletButton() {
                         />
                       </div>
                     </div>
-                  )}
+                  )} */}
                   <div className="flex flex-col gap-2">
                     <Button
                       onClick={openAccountModal}

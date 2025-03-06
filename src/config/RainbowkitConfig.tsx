@@ -1,10 +1,11 @@
-'use client'
-import React from 'react'
-import { WagmiProvider } from 'wagmi'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit'
-import { Chain, getDefaultConfig } from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
+"use client";
+import React from "react";
+import { WagmiProvider } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import { Chain, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+import { mainnet } from "viem/chains";
 // import { Contract } from 'ethers'
 // import Quoter from '@/abi/Quoter.json'
 
@@ -21,50 +22,59 @@ const client = new QueryClient();
 // } as const satisfies Chain;
 
 const MantaPacificNetwork = {
-    id: 3441006,
-    name: 'Manta Pacific Sepolia Testnet',
-    nativeCurrency: { name: 'Manta Pacific Sepolia Testnet', symbol: 'ETH', decimals: 18 },
-    rpcUrls: {
-        default: { http: ['	https://pacific-rpc.sepolia-testnet.manta.network/http'] },
+  id: 3441006,
+  name: "Manta Pacific Testnet",
+  nativeCurrency: {
+    name: "Manta Pacific Sepolia Testnet",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://pacific-rpc.sepolia-testnet.manta.network/http"],
     },
-
+  },
 } as const satisfies Chain;
 
-export const RainbowKitconfig = getDefaultConfig({
-    appName: 'AGHANIM AI',
-    projectId: '4c501f56f38d62ce93788345d517592d',
-    chains: [MantaPacificNetwork],
-    ssr: true, // If your dApp uses server side rendering (SSR),
+const SonicNetwork = {
+  id: 57054,
+  name: "Sonic Blaze Testnet",
+  nativeCurrency: {
+    name: "Manta Pacific Sepolia Testnet",
+    symbol: "S",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.blaze.soniclabs.com"],
+    },
+  },
+} as const satisfies Chain;
+
+export const ChainConfig = getDefaultConfig({
+  appName: "AGHANIM AI",
+  projectId: "4c501f56f38d62ce93788345d517592d",
+  chains: [SonicNetwork, MantaPacificNetwork],
+  ssr: true, // If your dApp uses server side rendering (SSR),
 });
 
-// const config = createConfig({
-//     chains: [MantaPacificNetwork],
-//     transports: {
-//         [MantaPacificNetwork.id]: http('https://pacific-rpc.manta.network/http'),
-//         Contract: {
-//             quoter: {
-//                 address: '0x3005827fB92A0cb7D0f65738D6D645d98A4Ad96b', // Quoter Address
-//                 abi: Quoter,
-//             },
-//         }
-//     },
-//     ssr: true,
-// })
-
 export function RainbowkitConfig({ children }: { children: React.ReactNode }) {
-    return (
-        <WagmiProvider config={RainbowKitconfig} >
-            <QueryClientProvider client={client}>
-                <RainbowKitProvider modalSize="compact" theme={darkTheme({
-                    accentColor: '#7b3fe4',
-                    accentColorForeground: 'white',
-                    borderRadius: 'small',
-                    fontStack: 'system',
-                    overlayBlur: 'small',
-                })}>
-                    {children}
-                </RainbowKitProvider>
-            </QueryClientProvider>
-        </WagmiProvider>
-    )
+  return (
+    <WagmiProvider config={ChainConfig}>
+      <QueryClientProvider client={client}>
+        <RainbowKitProvider
+          modalSize="compact"
+          theme={darkTheme({
+            accentColor: "#7b3fe4",
+            accentColorForeground: "white",
+            borderRadius: "small",
+            fontStack: "system",
+            overlayBlur: "small",
+          })}
+        >
+          {children}
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }
