@@ -49,6 +49,17 @@ export default function Header() {
         >
           Studio
         </Link>
+
+        <Link
+          href="/swap"
+          className={`${
+            pathname === "/swap"
+              ? "text-primary underline underline-offset-4"
+              : "text-muted-foreground hover:text-primary duration-300 ease-in-out hover:underline underline-offset-0 hover:underline-offset-4"
+          }`}
+        >
+          Swap
+        </Link>
       </nav>
       {/* <nav className={`${pathname === "/" ? "justify-self-end" : "hidden"}`}> */}
       {/* <div className="ml-auto"> */}
