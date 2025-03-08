@@ -24,7 +24,6 @@ export default function Airdrop() {
     address: TokenAddress,
     abi: TokenABI,
     functionName: "balanceOf",
-    chainId: chainId,
     args: [address],
   });
 
@@ -32,7 +31,6 @@ export default function Airdrop() {
     address: TokenAddressSonic,
     abi: TokenABI,
     functionName: "balanceOf",
-    chainId: chainId,
     args: [address],
   });
 
@@ -43,25 +41,25 @@ export default function Airdrop() {
     isSuccess,
   } = useWriteContract();
 
-  // Conditional fetching of whitelist status based on chainId
-  const whitelistData =
-    chainId === 3441006
-      ? useReadContract({
-          address: TokenAddress,
-          abi: TokenABI,
-          functionName: "whitelist",
-          args: [address],
-        })
-      : chainId === 57054
-      ? useReadContract({
-          address: TokenAddressSonic,
-          abi: TokenABI,
-          functionName: "whitelist",
-          args: [address],
-        })
-      : null;
+  // Fetch whitelist status for both contracts unconditionally
+  const { data: whitelistManta } = useReadContract({
+    address: TokenAddress,
+    abi: TokenABI,
+    functionName: "whitelist",
+    args: [address],
+  });
 
-  const isEligible = whitelistData?.data ? whitelistData.data : null;
+  const { data: whitelistSonic } = useReadContract({
+    address: TokenAddressSonic,
+    abi: TokenABI,
+    functionName: "whitelist",
+    args: [address],
+  });
+
+  // Determine eligibility based on the current chainId
+  const isEligible =
+    (chainId === 3441006 && whitelistManta) ||
+    (chainId === 57054 && whitelistSonic);
 
   const submit = async () => {
     const tokenAddress = chainId === 3441006 ? TokenAddress : TokenAddressSonic;
