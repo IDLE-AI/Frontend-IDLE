@@ -1,6 +1,7 @@
 import React from "react";
 import AgentsCard from "../../components/AgentsCard";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function page() {
   return (
@@ -15,8 +16,8 @@ export default function page() {
             interact with personalized AI Agents without any coding experience.
           </p>
         </div>
-        <Button className="rounded" variant={"secondary"} size="lg">
-          BUILD NOW
+        <Button className="rounded" variant={"secondary"} size="lg" asChild>
+          <Link href={"/create"}>BUILD NOW</Link>
         </Button>
       </div>
       <hr className="my-10" />
