@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAccount, useChainId, useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import {
   FactoryTokenABI,
   FactoryTokenAddress,
@@ -24,7 +24,7 @@ import moment from "moment";
 //   SelectTrigger,
 //   SelectValue,
 // } from "@/components/ui/select";
-import { ChainConfig } from "@/config/RainbowkitConfig";
+// import { ChainConfig } from "@/config/RainbowkitConfig";
 import { Badge } from "@/components/ui/badge";
 
 // Define the Token interface
@@ -43,21 +43,21 @@ interface Token {
 }
 
 export default function AgentsCard() {
-  const { isDisconnected } = useAccount();
-  const chain = useChainId();
+  const { isDisconnected, chain } = useAccount();
+  // const chain = useChainId();
   // Specify the type of AgentData
   const { data: AgentData } = useReadContract({
     address: FactoryTokenAddress,
     abi: FactoryTokenABI,
     functionName: "getAllTokens",
-    chainId: chain,
+    chainId: chain?.id,
   }) as { data: Token[] };
 
   const { data: AgentDataSonic } = useReadContract({
     address: FactoryTokenAddressSonic,
     abi: FactoryTokenABI,
     functionName: "getAllTokens",
-    chainId: chain,
+    chainId: chain?.id,
   }) as { data: Token[] };
 
   const mergedTokens = [...(AgentData || []), ...(AgentDataSonic || [])];
@@ -65,7 +65,7 @@ export default function AgentsCard() {
     return Number(b.createdAt) - Number(a.createdAt);
   });
 
-  const chainName = ChainConfig.chains.find((c) => c.id === chain)?.name;
+  // const chainName = ChainConfig.chains.find((c) => c.id === chain)?.name;
   console.log(chain);
   return (
     <section className="space-y-5">
@@ -97,27 +97,27 @@ export default function AgentsCard() {
                     priority={true}
                     className="w-full aspect-square rounded object-cover"
                   />
-                  {chainName && (
+                  {chain?.name && (
                     <Badge variant="outline">
                       <Image
                         src={
-                          chain === 3441006
+                          chain.id === 3441006
                             ? "/images/manta.png"
                             : "/images/sonic-logo.png"
                         }
                         width={20}
                         height={20}
-                        alt={chainName}
+                        alt={chain.name}
                         priority={true}
                         className="bg-primary rounded-full"
                       />
-                      <p className="text-xs font-light">{chainName}</p>
+                      <p className="text-xs font-light">{chain.name}</p>
                     </Badge>
                   )}
                   <div>
                     <CardTitle className="">
                       <p>{token.name}</p>
-                      <p className="text-sm text-muted-foreground f">
+                      <p className="text-sm text-muted-foreground font-normal">
                         ${token.ticker}
                       </p>
                     </CardTitle>

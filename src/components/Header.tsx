@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import WalletButton from "./WalletButton";
 import { BookOpen } from "lucide-react";
+import { ConnectButton } from "@xellar/kit";
 
 export default function Header() {
   const pathname = usePathname();
@@ -65,6 +66,7 @@ export default function Header() {
       {/* <div className="ml-auto"> */}
       <nav className={`${pathname === "/" ? "hidden" : "ml-auto"}`}>
         <WalletButton />
+        {/* <ConnectButton /> */}
       </nav>
 
       <nav className={`${pathname === "/" ? "ml-auto" : "hidden"}`}>

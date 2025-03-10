@@ -17,7 +17,7 @@ export default function page() {
           </p>
         </div>
         <Button className="rounded" variant={"secondary"} size="lg" asChild>
-          <Link href={"/create"}>BUILD NOW</Link>
+          <Link href={"/agents/create"}>BUILD NOW</Link>
         </Button>
       </div>
       <hr className="my-10" />
