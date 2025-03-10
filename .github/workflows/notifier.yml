@@ -1,20 +1,22 @@
 name: telegram message
-on: [push]
-jobs:
 
-  build:
-    name: Build
+on: [push]
+
+jobs:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - name: send telegram message on push
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Send Telegram message
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
             ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}
-            
-            Repository: ${{ github.repository }}
-            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            message: ${{ github.event.head_commit.message }}
+            IDLE-AI/Frontend-IDLE
+            changes: ${{ github.event.head_commit.url }}
+            repository: ${{ github.repository }}
