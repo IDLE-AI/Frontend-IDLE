@@ -24,6 +24,21 @@ import * as Yup from "yup";
 import WalletButton from "./WalletButton";
 import Link from "next/link";
 
+type valuesForm = {
+  name: string;
+  ticker: string;
+  iconUrl: string;
+  description: string;
+  twitter: string;
+  website: string;
+  behavior: string;
+  paymentAmount: string;
+  chatStyle: string;
+  topics: string;
+  lore: string;
+  generalStyle: string;
+};
+
 export default function CreateForm() {
   const { address, isConnected, chain } = useAccount();
 
@@ -50,7 +65,7 @@ export default function CreateForm() {
 
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: valuesForm) => {
     if (chain?.id === 3441006) {
       try {
         const approvalTx = await writeContract({
