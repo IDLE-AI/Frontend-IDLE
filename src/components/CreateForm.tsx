@@ -23,6 +23,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import WalletButton from "./WalletButton";
 import Link from "next/link";
+import { toast } from "sonner";
 
 type valuesForm = {
   name: string;
@@ -68,7 +69,7 @@ export default function CreateForm() {
   const handleSubmit = async (values: valuesForm) => {
     if (chain?.id === 3441006) {
       try {
-        const approvalTx = await writeContract({
+        await writeContract({
           address: TokenAddress,
           abi: TokenABI,
           functionName: "approve",
@@ -78,7 +79,7 @@ export default function CreateForm() {
           ],
         });
 
-        const createTokenTx = await writeContract({
+        await writeContract({
           address: FactoryTokenAddress,
           abi: FactoryTokenABI,
           functionName: "createTokenWithPayment",
@@ -94,18 +95,16 @@ export default function CreateForm() {
           ],
         });
 
-        console.log("Approval Transaction:", approvalTx);
-        console.log("Create Token Transaction:", createTokenTx);
         formik.resetForm();
+        toast("Agent has been created.");
       } catch (error) {
-        console.error("Transaction failed:", error);
-        alert("Transaction failed. Please try again.");
+        toast("Transaction failed. Please try again.");
       }
     }
 
     if (chain?.id === 57054) {
       try {
-        const approvalTx = await writeContract({
+        await writeContract({
           address: TokenAddressSonic,
           abi: TokenABI,
           functionName: "approve",
@@ -115,7 +114,7 @@ export default function CreateForm() {
           ],
         });
 
-        const createTokenTx = await writeContract({
+        await writeContract({
           address: FactoryTokenAddressSonic,
           abi: FactoryTokenABI,
           functionName: "createTokenWithPayment",
@@ -130,12 +129,10 @@ export default function CreateForm() {
             parseUnits(values.paymentAmount.toString(), 18),
           ],
         });
-
-        console.log("Approval Transaction:", approvalTx);
-        console.log("Create Token Transaction:", createTokenTx);
+        formik.resetForm();
+        toast("Agent has been created.");
       } catch (error) {
-        console.error("Transaction failed:", error);
-        alert("Transaction failed. Please try again.");
+        toast("Transaction failed. Please try again.");
       }
     }
   };
@@ -477,6 +474,7 @@ export default function CreateForm() {
           className="rounded font-bold uppercase shadow-md shadow-primary border-background border-2"
           type="submit"
           disabled={
+            Number(balanceIdleToken || balanceIdleTokenSonic) > 0 ||
             isPending ||
             isConfirming ||
             isConfirmed ||
