@@ -1,3 +1,6 @@
+// app/api/chat/route.ts (remains the same as my previous fix)
+
+// For the chat interface component, we need to add code formatting:
 import React from "react";
 import {
   Dialog,
@@ -31,6 +34,53 @@ interface Token {
 type Message = {
   role: "assistant" | "user";
   content: string;
+};
+
+// Helper function to format message content with code blocks
+const formatMessageContent = (content: string) => {
+  if (!content.includes("```")) return <span>{content}</span>;
+
+  const segments = [];
+  let currentIndex = 0;
+  let codeBlockStart = content.indexOf("```", currentIndex);
+
+  while (codeBlockStart !== -1) {
+    // Add text before code block
+    if (codeBlockStart > currentIndex) {
+      segments.push(
+        <span key={`text-${currentIndex}`}>
+          {content.slice(currentIndex, codeBlockStart)}
+        </span>
+      );
+    }
+
+    // Find the end of the code block
+    const codeBlockEnd = content.indexOf("```", codeBlockStart + 3);
+    if (codeBlockEnd === -1) break; // No closing backticks
+
+    // Extract and add the code block
+    const codeContent = content.slice(codeBlockStart + 3, codeBlockEnd).trim();
+    segments.push(
+      <pre
+        key={`code-${codeBlockStart}`}
+        className="bg-gray-800 text-gray-200 p-3 rounded my-2 overflow-x-auto max-w-prose"
+      >
+        <code>{codeContent}</code>
+      </pre>
+    );
+
+    currentIndex = codeBlockEnd + 3;
+    codeBlockStart = content.indexOf("```", currentIndex);
+  }
+
+  // Add any remaining text after the last code block
+  if (currentIndex < content.length) {
+    segments.push(
+      <span key={`text-${currentIndex}`}>{content.slice(currentIndex)}</span>
+    );
+  }
+
+  return <>{segments}</>;
 };
 
 export default function AgentModal({ AgentData }: { AgentData: Token }) {
@@ -126,51 +176,45 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
           </div>
         </DialogHeader>
         <hr />
-        <ScrollArea className="h-96 pr-4">
+        <ScrollArea className="h-96 pr-4" ref={scrollAreaRef}>
           {messages.map((msg, index) => (
             <div className="grid" key={index}>
-              <p
-                key={index}
-                className={`my-2 p-2 rounded font-light text-sm max-w-prose break-all flex items-center gap-2 ${
+              <div
+                className={`my-2 p-2 rounded font-light text-sm max-w-prose ${
                   msg.role === "user"
-                    ? " bg-primary text-secondary place-self-end"
-                    : "bg-secondary place-self-start"
+                    ? "bg-primary text-secondary place-self-end flex items-center gap-2"
+                    : "bg-secondary place-self-start whitespace-pre-line"
                 }`}
               >
                 {msg.role === "assistant" && (
-                  <Avatar className="w-7 h-7">
-                    <AvatarImage src={AgentData.iconURL} />
-                    <AvatarFallback>
-                      {AgentData.ticker.charAt(1)}
-                    </AvatarFallback>
-                  </Avatar>
-                )}{" "}
-                {msg.role === "user" && <CircleUserRound />} {msg.content}
-              </p>
+                  <div className="flex items-start gap-2">
+                    <Avatar className="w-7 h-7 mt-1">
+                      <AvatarImage src={AgentData.iconURL} />
+                      <AvatarFallback>
+                        {AgentData.ticker.charAt(1)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="message-content">
+                      {formatMessageContent(msg.content)}
+                    </div>
+                  </div>
+                )}
+                {msg.role === "user" && (
+                  <>
+                    <CircleUserRound /> {msg.content}
+                  </>
+                )}
+              </div>
             </div>
           ))}
         </ScrollArea>
-        {/* <div className="flex flex-col h-96 overflow-y-auto p-4  rounded-lg">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`my-2 p-2 rounded-lg ${
-                msg.role === "user"
-                  ? " bg-primary text-secondary self-end"
-                  : "bg-secondary self-start"
-              }`}
-            >
-              {msg.content}
-            </div>
-          ))}
-        </div> */}
         <form onSubmit={handleSubmit} className="flex mt-4">
           <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
-            className="rounded  duration-200 ease-in-out"
+            className="rounded duration-200 ease-in-out"
             disabled={loading}
           />
           <Button

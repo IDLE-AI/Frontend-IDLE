@@ -98,7 +98,9 @@ export default function CreateForm() {
         formik.resetForm();
         toast("Agent has been created.");
       } catch (error) {
-        toast("Transaction failed. Please try again.");
+        toast("Transaction failed. Please try again.", {
+          description: String(error),
+        });
       }
     }
 
@@ -132,7 +134,9 @@ export default function CreateForm() {
         formik.resetForm();
         toast("Agent has been created.");
       } catch (error) {
-        toast("Transaction failed. Please try again.");
+        toast("Transaction failed. Please try again.", {
+          description: String(error),
+        });
       }
     }
   };
