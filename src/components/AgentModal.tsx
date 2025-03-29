@@ -1,7 +1,4 @@
-// app/api/chat/route.ts (remains the same as my previous fix)
-
-// For the chat interface component, we need to add code formatting:
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -63,7 +60,7 @@ const formatMessageContent = (content: string) => {
     segments.push(
       <pre
         key={`code-${codeBlockStart}`}
-        className="bg-gray-800 text-gray-200 p-3 rounded my-2 overflow-x-auto max-w-prose"
+        className="bg-primary/15 text-primary p-3 rounded my-2 overflow-x-auto w-full"
       >
         <code>{codeContent}</code>
       </pre>
@@ -93,12 +90,14 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
   ]);
   const [input, setInput] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-  const scrollAreaRef = React.useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
   }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -106,6 +105,7 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
     if (input.trim()) {
       const newMessage: Message = { role: "user", content: input };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setInput(""); // Clear input immediately for better UX
 
       try {
         setLoading(true);
@@ -117,6 +117,7 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
           body: JSON.stringify({ message: input }),
         });
         const data = await response.json();
+
         if (response.ok) {
           setMessages((prevMessages) => [
             ...prevMessages,
@@ -125,7 +126,6 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
         } else {
           throw new Error(data.error);
         }
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching AI response:", error);
         setMessages((prevMessages) => [
@@ -135,14 +135,12 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
             content: "Sorry, I couldn't process your request.",
           },
         ]);
-        setInput("");
-        setLoading(false);
       } finally {
-        setInput("");
         setLoading(false);
       }
     }
   };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -176,37 +174,45 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
           </div>
         </DialogHeader>
         <hr />
-        <ScrollArea className="h-96 pr-4" ref={scrollAreaRef}>
-          {messages.map((msg, index) => (
-            <div className="grid" key={index}>
+        <ScrollArea className="h-96 pr-4">
+          <div className="flex flex-col space-y-4 text-sm">
+            {messages.map((msg, index) => (
               <div
-                className={`my-2 p-2 rounded font-light text-sm max-w-prose ${
+                className={`grid ${
                   msg.role === "user"
-                    ? "bg-primary text-secondary place-self-end flex items-center gap-2"
-                    : "bg-secondary place-self-start whitespace-pre-line"
+                    ? "justify-items-end"
+                    : "justify-items-start"
                 }`}
+                key={index}
               >
-                {msg.role === "assistant" && (
+                <div
+                  className={`p-3 rounded max-w-prose ${
+                    msg.role === "user"
+                      ? "bg-primary text-secondary"
+                      : "bg-secondary whitespace-pre-line"
+                  }`}
+                >
                   <div className="flex items-start gap-2">
-                    <Avatar className="w-7 h-7 mt-1">
-                      <AvatarImage src={AgentData.iconURL} />
-                      <AvatarFallback>
-                        {AgentData.ticker.charAt(1)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="message-content">
+                    {msg.role === "assistant" ? (
+                      <Avatar className="w-7 h-7 mt-1 flex-shrink-0">
+                        <AvatarImage src={AgentData.iconURL} />
+                        <AvatarFallback>
+                          {AgentData.ticker.charAt(1)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <CircleUserRound className="w-5 h-5 mt-1 flex-shrink-0" />
+                    )}
+                    <div className="message-content overflow-hidden">
                       {formatMessageContent(msg.content)}
                     </div>
                   </div>
-                )}
-                {msg.role === "user" && (
-                  <>
-                    <CircleUserRound /> {msg.content}
-                  </>
-                )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+            <div ref={messagesEndRef} />{" "}
+            {/* Empty div for scrolling to bottom */}
+          </div>
         </ScrollArea>
         <form onSubmit={handleSubmit} className="flex mt-4">
           <Input
