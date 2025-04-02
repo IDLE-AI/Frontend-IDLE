@@ -67,7 +67,7 @@ export default function CreateForm() {
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
 
   const handleSubmit = async (values: valuesForm) => {
-    if (chain?.id === 3441006) {
+    if (chain?.id === 11155111) {
       try {
         await writeContract({
           address: TokenAddress,
@@ -94,9 +94,6 @@ export default function CreateForm() {
             parseUnits(values.paymentAmount.toString(), 18),
           ],
         });
-
-        formik.resetForm();
-        toast("Agent has been created.");
       } catch (error) {
         toast("Transaction failed. Please try again.", {
           description: String(error),
@@ -131,8 +128,6 @@ export default function CreateForm() {
             parseUnits(values.paymentAmount.toString(), 18),
           ],
         });
-        formik.resetForm();
-        toast("Agent has been created.");
       } catch (error) {
         toast("Transaction failed. Please try again.", {
           description: String(error),
@@ -176,6 +171,13 @@ export default function CreateForm() {
     useWaitForTransactionReceipt({
       hash: transactionHash || undefined,
     });
+
+  React.useEffect(() => {
+    if (isConfirmed) {
+      toast("Agent Successfully Created");
+      formik.resetForm();
+    }
+  }, [isConfirmed]);
 
   const uploadFile = async (file: File) => {
     try {
@@ -478,27 +480,14 @@ export default function CreateForm() {
           className="rounded font-bold uppercase shadow-md shadow-primary border-background border-2"
           type="submit"
           disabled={
-            Number(balanceIdleToken || balanceIdleTokenSonic) > 0 ||
+            Number(balanceIdleToken || balanceIdleTokenSonic) < 0 ||
             isPending ||
             isConfirming ||
             isConfirmed ||
             !formik.isValid ||
             // !file ||
-            formik.isSubmitting ||
-            isSuccess ||
-            !formik.values.name ||
-            !formik.values.ticker ||
-            !formik.values.iconUrl ||
-            !formik.values.description ||
-            !formik.values.twitter ||
-            !formik.values.website ||
-            !formik.values.behavior ||
-            !formik.values.paymentAmount ||
-            !formik.values.chatStyle ||
-            !formik.values.topics ||
-            !formik.values.lore ||
-            !formik.values.generalStyle ||
-            !formik.values.chatStyle
+            // formik.isSubmitting ||
+            isSuccess
           }
           size={"lg"}
         >
@@ -522,6 +511,16 @@ export default function CreateForm() {
         {isConfirmed && (
           <p className="text-muted-foreground">Creating AI Success!</p>
         )}
+        {chain?.id === 11155111 && isConfirmed && (
+          <Button asChild className="rounded" variant={"outline"}>
+            <Link
+              href={`https://sepolia.etherscan.io/tx/${transactionHash}`}
+              target="_blank"
+            >
+              View Transaction Sepolia Explorer
+            </Link>
+          </Button>
+        )}
         {chain?.id === 3441006 && isConfirmed && (
           <Button asChild className="rounded" variant={"outline"}>
             <Link
@@ -532,7 +531,6 @@ export default function CreateForm() {
             </Link>
           </Button>
         )}
-
         {chain?.id === 57054 && isConfirmed && (
           <Button asChild className="rounded" variant={"outline"}>
             <Link

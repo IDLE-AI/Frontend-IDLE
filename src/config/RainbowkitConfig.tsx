@@ -3,7 +3,7 @@ import React from "react";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { MantaPacificNetwork, SonicNetwork } from "./chain";
-import { liskSepolia } from "viem/chains";
+// import { liskSepolia } from "viem/chains";
 import {
   Chain,
   darkTheme,
@@ -12,22 +12,23 @@ import {
 } from "@rainbow-me/rainbowkit";
 // import { XellarKitProvider, defaultConfig, darkTheme } from "@xellar/kit";
 import "@rainbow-me/rainbowkit/styles.css";
+import { sepolia } from "viem/chains";
 const client = new QueryClient();
 
-const MantaPacificNetwork = {
-  id: 3441006,
-  name: "Manta Pacific Testnet",
-  nativeCurrency: {
-    name: "Manta Pacific Sepolia Testnet",
-    symbol: "ETH",
-    decimals: 18,
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://pacific-rpc.sepolia-testnet.manta.network/http"],
-    },
-  },
-} as const satisfies Chain;
+// const MantaPacificNetwork = {
+//   id: 3441006,
+//   name: "Manta Pacific Testnet",
+//   nativeCurrency: {
+//     name: "Manta Pacific Sepolia Testnet",
+//     symbol: "ETH",
+//     decimals: 18,
+//   },
+//   rpcUrls: {
+//     default: {
+//       http: ["https://pacific-rpc.sepolia-testnet.manta.network/http"],
+//     },
+//   },
+// } as const satisfies Chain;
 
 const SonicNetwork = {
   id: 57054,
@@ -49,7 +50,7 @@ const SonicNetwork = {
 export const ChainConfig = getDefaultConfig({
   appName: "IDLE",
   projectId: "4c501f56f38d62ce93788345d517592d",
-  chains: [SonicNetwork, MantaPacificNetwork, liskSepolia],
+  chains: [sepolia, SonicNetwork],
   ssr: true, // If your dApp uses server side rendering (SSR),
 });
 

@@ -1,4 +1,6 @@
-export const FactoryTokenAddress = "0x1EeD30A26C683e747e9661D71614bd1db5aD2111";
+export const FactoryTokenAddress = "0xd764651471F9C2e98153989D3CF9B210aef7bB9a";
+export const FactoryTokenAddressManta =
+  "0x1EeD30A26C683e747e9661D71614bd1db5aD2111";
 export const FactoryTokenAddressSonic =
   "0xc960d83D8FD309CC8614A212EF653D6AD58bDaDA";
 
