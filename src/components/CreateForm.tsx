@@ -12,10 +12,16 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { TokenABI, TokenAddress, TokenAddressSonic } from "@/contracts/Token";
+import {
+  TokenABI,
+  TokenAddress,
+  TokenAddressEduChainTestnet,
+  TokenAddressSonic,
+} from "@/contracts/Token";
 import {
   FactoryTokenABI,
   FactoryTokenAddress,
+  FactoryTokenAddressEDUChainTestnet,
   FactoryTokenAddressSonic,
 } from "@/contracts/FactoryToken";
 import { parseUnits } from "viem";
@@ -41,22 +47,34 @@ type valuesForm = {
 };
 
 export default function CreateForm() {
-  const { address, isConnected, chain } = useAccount();
+  const { address, isConnected, chain, chainId } = useAccount();
+
+  const [tokenContract, setTokenContract] = React.useState<string>("");
+  const [FactoryTokenContract, setFactoryTokenContract] =
+    React.useState<string>("");
+
+  React.useEffect(() => {
+    if (chainId === 11155111 || chainId === 111_155_111) {
+      //sepolia
+      setTokenContract(TokenAddress);
+      setFactoryTokenContract(FactoryTokenAddress);
+    } else if (chainId === 57054) {
+      // sonic blaze testnet
+      setTokenContract(TokenAddressSonic);
+      setFactoryTokenContract(FactoryTokenAddressSonic);
+    } else if (chainId === 656476) {
+      //educhain testnet
+      setTokenContract(TokenAddressEduChainTestnet);
+      setFactoryTokenContract(FactoryTokenAddressEDUChainTestnet);
+    }
+  }, [chainId]);
 
   const { data: balanceIdleToken } = useReadContract({
-    address: TokenAddress,
+    address: tokenContract as `0x${string}`,
     abi: TokenABI,
     functionName: "balanceOf",
     args: [address],
   });
-
-  const { data: balanceIdleTokenSonic } = useReadContract({
-    address: TokenAddressSonic,
-    abi: TokenABI,
-    functionName: "balanceOf",
-    args: [address],
-  });
-
   const {
     data: transactionHash,
     isPending,
@@ -67,72 +85,36 @@ export default function CreateForm() {
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
 
   const handleSubmit = async (values: valuesForm) => {
-    if (chain?.id === 11155111) {
-      try {
-        await writeContract({
-          address: TokenAddress,
-          abi: TokenABI,
-          functionName: "approve",
-          args: [
-            FactoryTokenAddress,
-            parseUnits(values.paymentAmount.toString(), 18),
-          ],
-        });
+    try {
+      await writeContract({
+        address: TokenAddress,
+        abi: TokenABI,
+        functionName: "approve",
+        args: [
+          FactoryTokenContract,
+          parseUnits(values.paymentAmount.toString(), 18),
+        ],
+      });
 
-        await writeContract({
-          address: FactoryTokenAddress,
-          abi: FactoryTokenABI,
-          functionName: "createTokenWithPayment",
-          args: [
-            values.name,
-            values.ticker,
-            values.iconUrl,
-            values.description,
-            values.twitter,
-            values.website,
-            values.behavior,
-            parseUnits(values.paymentAmount.toString(), 18),
-          ],
-        });
-      } catch (error) {
-        toast("Transaction failed. Please try again.", {
-          description: String(error),
-        });
-      }
-    }
-
-    if (chain?.id === 57054) {
-      try {
-        await writeContract({
-          address: TokenAddressSonic,
-          abi: TokenABI,
-          functionName: "approve",
-          args: [
-            FactoryTokenAddressSonic,
-            parseUnits(values.paymentAmount.toString(), 18),
-          ],
-        });
-
-        await writeContract({
-          address: FactoryTokenAddressSonic,
-          abi: FactoryTokenABI,
-          functionName: "createTokenWithPayment",
-          args: [
-            values.name,
-            values.ticker,
-            values.iconUrl,
-            values.description,
-            values.twitter,
-            values.website,
-            values.behavior,
-            parseUnits(values.paymentAmount.toString(), 18),
-          ],
-        });
-      } catch (error) {
-        toast("Transaction failed. Please try again.", {
-          description: String(error),
-        });
-      }
+      await writeContract({
+        address: FactoryTokenContract as `0x${string}`,
+        abi: FactoryTokenABI,
+        functionName: "createTokenWithPayment",
+        args: [
+          values.name,
+          values.ticker,
+          values.iconUrl,
+          values.description,
+          values.twitter,
+          values.website,
+          values.behavior,
+          parseUnits(values.paymentAmount.toString(), 18),
+        ],
+      });
+    } catch (error) {
+      toast("Transaction failed. Please try again.", {
+        description: String(error),
+      });
     }
   };
 
@@ -232,20 +214,17 @@ export default function CreateForm() {
       <div className="bg-primary/15 p-3 rounded grid grid-cols-2 place-content-center place-items-center">
         <p
           className={`${
-            Number(balanceIdleToken || balanceIdleTokenSonic) > 0
+            Number(balanceIdleToken) > 0
               ? "text-green-500 text-sm"
               : "text-red-500 text-sm"
           }`}
         >
-          {Number(balanceIdleToken || balanceIdleTokenSonic) > 0
+          {Number(balanceIdleToken) > 0
             ? "Eligible to create an AI AGENT"
             : "Please buy IDLE tokens."}
         </p>
         <p className="text-sm">
-          {(Number(balanceIdleToken || balanceIdleTokenSonic) / 1e18).toFixed(
-            0
-          )}{" "}
-          IDLE
+          {(Number(balanceIdleToken) / 1e18).toFixed(0)} IDLE
         </p>
       </div>
       {/* AGENT DETAILS */}
@@ -480,7 +459,7 @@ export default function CreateForm() {
           className="rounded font-bold uppercase shadow-md shadow-primary border-background border-2"
           type="submit"
           disabled={
-            Number(balanceIdleToken || balanceIdleTokenSonic) < 0 ||
+            Number(balanceIdleToken) < 0 ||
             isPending ||
             isConfirming ||
             isConfirmed ||

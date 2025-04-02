@@ -45,12 +45,27 @@ const SonicNetwork = {
   },
 } as const satisfies Chain;
 
+const EDUChainTestnetNetwork = {
+  id: 656476,
+  name: "EDU Chain Testnet",
+  nativeCurrency: {
+    name: "EDU Chain Testnet",
+    symbol: "EDU",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.open-campus-codex.gelato.digital"],
+    },
+  },
+} as const satisfies Chain;
+
 // https://solana-devnet.g.alchemy.com/v2/uXnyCu-59hxPNS-5USSebL3eum_qHs_p
 
 export const ChainConfig = getDefaultConfig({
   appName: "IDLE",
   projectId: "4c501f56f38d62ce93788345d517592d",
-  chains: [sepolia, SonicNetwork],
+  chains: [sepolia, EDUChainTestnetNetwork, SonicNetwork],
   ssr: true, // If your dApp uses server side rendering (SSR),
 });
 

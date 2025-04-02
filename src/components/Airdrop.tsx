@@ -3,8 +3,18 @@ import React from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { swapABI, swapAddress } from "@/contracts/Swap";
-import { TokenABI, TokenAddress } from "@/contracts/Token";
+import {
+  swapABI,
+  // swapAddress,
+  // swapAddressEDUChainTestnet,
+  swapAddressSonic,
+} from "@/contracts/Swap";
+import {
+  TokenABI,
+  // TokenAddress,
+  // TokenAddressEduChainTestnet,
+  TokenAddressSonic,
+} from "@/contracts/Token";
 import { parseUnits } from "viem";
 
 export default function Airdrop() {
@@ -16,16 +26,16 @@ export default function Airdrop() {
 
   async function addLiq() {
     await writeContractAsync({
-      address: TokenAddress,
+      address: TokenAddressSonic,
       abi: TokenABI,
       functionName: "approve",
-      args: [swapAddress, parseUnits("2899900", 18)],
+      args: [swapAddressSonic, parseUnits("3000000", 18)],
     });
     await writeContractAsync({
-      address: swapAddress,
+      address: swapAddressSonic,
       abi: swapABI,
       functionName: "addLiquidity",
-      args: [TokenAddress, parseUnits("2899900", 18)],
+      args: [TokenAddressSonic, parseUnits("3000000", 18)],
     });
   }
 

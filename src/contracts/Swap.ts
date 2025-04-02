@@ -1,4 +1,7 @@
 export const swapAddress = "0x9d2de8DD1ef4fc2917a8d4D110eA6042Fc09f3b4";
+export const swapAddressSonic = "0x09c9078bA0d857c393f532FA67d442E7E92eF356";
+export const swapAddressEDUChainTestnet =
+  "0x6f672cDCb715bdE68AEEE704EFBBD6fD734e40eB";
 
 export const swapABI = [
   {

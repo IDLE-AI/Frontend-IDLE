@@ -4,7 +4,10 @@ import React from "react";
 export default function page() {
   return (
     <main className="h-[calc(100vh-20vh)] flex flex-col items-center justify-center gap-5">
-      <h1 className="2xl:text-2xl font-medium">Swap Your IDLE Tokens</h1>
+      <h1 className="xl:text-3xl max-w-lg text-center font-light">
+        Swap Your IDLE Tokens for a{" "}
+        <span className="font-bold">Fast, Secure, and Simple</span> Experience
+      </h1>
       <CardSwap />
     </main>
   );

@@ -1,59 +1,118 @@
 "use client";
-import { swapABI, swapAddress } from "@/contracts/Swap";
+import {
+  swapABI,
+  swapAddress,
+  swapAddressEDUChainTestnet,
+  swapAddressSonic,
+} from "@/contracts/Swap";
 import React from "react";
 import {
   injected,
   useAccount,
+  useBalance,
   useConnect,
   useReadContract,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
 import { Button } from "./ui/button";
-import { TokenABI, TokenAddress } from "@/contracts/Token";
+import {
+  TokenABI,
+  TokenAddress,
+  TokenAddressEduChainTestnet,
+  TokenAddressSonic,
+} from "@/contracts/Token";
 import { ArrowDownUp, Wallet } from "lucide-react";
-import { parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import { toast } from "sonner";
 import Link from "next/link";
-import Image from "next/image";
-
-const listToken = [
-  {
-    address: "0x0000000000000000000000000000000000000000",
-    name: "ETH",
-    image: "/images/eth.png",
-  },
-  {
-    address: TokenAddress,
-    name: "IDLE",
-    image: "/images/Idle AI_Logomark.png",
-  },
-];
+// import Image from "next/image";
 
 export default function CardSwap() {
-  const { isConnected, chainId, chain } = useAccount();
+  const { isConnected, chainId, chain, address } = useAccount();
   const { connect } = useConnect();
-  const [fromToken, setFromToken] = React.useState<string>(
-    listToken[0].address
+
+  const { data: balanceNativeUser } = useBalance({
+    address: address,
+  });
+
+  const [tokenContract, setTokenContract] =
+    React.useState<string>(TokenAddress);
+  const [swapContract, setSwapContract] = React.useState<string>(swapAddress);
+
+  React.useEffect(() => {
+    if (chainId === 11155111 || chainId === 111_155_111) {
+      // Sepolia
+      setTokenContract(TokenAddress);
+      setSwapContract(swapAddress);
+    } else if (chainId === 57054) {
+      // Sonic Blaze Testnet
+      setTokenContract(TokenAddressSonic);
+      setSwapContract(swapAddressSonic);
+    } else if (chainId === 656476) {
+      // EduChain Testnet
+      setTokenContract(TokenAddressEduChainTestnet);
+      setSwapContract(swapAddressEDUChainTestnet);
+    }
+  }, [chainId]);
+
+  const { data: balanceIdleToken } = useReadContract({
+    address: tokenContract as `0x${string}`,
+    abi: TokenABI,
+    functionName: "balanceOf",
+    args: [address],
+  });
+
+  const listToken = React.useMemo(
+    () => [
+      {
+        address: "0x0000000000000000000000000000000000000000",
+        name: chain?.nativeCurrency.symbol || "ETH",
+        image: "",
+        balance: balanceNativeUser ? balanceNativeUser?.formatted : "0",
+      },
+      {
+        address: tokenContract as `0x${string}`,
+        name: "IDLE",
+        image: "/images/Idle AI_Logomark.png",
+        balance: balanceIdleToken
+          ? formatUnits(BigInt(balanceIdleToken as bigint), 18)
+          : "0",
+      },
+    ],
+    [
+      balanceNativeUser,
+      balanceIdleToken,
+      chain?.nativeCurrency.symbol,
+      tokenContract,
+    ]
   );
 
-  const [toToken, setToToken] = React.useState<string>(listToken[1].address);
+  const [fromToken, setFromToken] = React.useState<string>("");
+  const [toToken, setToToken] = React.useState<string>("");
   const [amount, setAmount] = React.useState<string>("");
-  const [resultCalculate, setResultCalculate] = React.useState<
-    string | number | unknown
-  >("");
+  const [resultCalculate, setResultCalculate] = React.useState<string>("");
+
+  React.useEffect(() => {
+    const tokenA = listToken[0].address;
+    const tokenB = listToken[1].address;
+    setFromToken(tokenA);
+    setToToken(tokenB);
+  }, [listToken]);
 
   const {
     data: calculateSwap,
     refetch,
     isLoading,
+    isError,
+    failureReason,
   } = useReadContract({
-    address: swapAddress,
+    address: swapContract as `0x${string}`,
     abi: swapABI,
     functionName: "calculateSwap",
+    chainId: chainId,
     args: [fromToken, toToken, parseUnits(amount, 18)],
   });
-
   // Debounced function
   const debouncedFetchSwap = React.useCallback(() => {
     setTimeout(() => {
@@ -62,7 +121,7 @@ export default function CardSwap() {
   }, [refetch]);
 
   React.useEffect(() => {
-    setResultCalculate(calculateSwap);
+    setResultCalculate(calculateSwap as string);
   }, [calculateSwap]);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,11 +138,15 @@ export default function CardSwap() {
     const token = listToken.find((token) => token.address === address);
     return token ? token.name : " ";
   };
-
-  const getTokenImage = (address: string) => {
+  const getTokenBalance = (address: string) => {
     const token = listToken.find((token) => token.address === address);
-    return token ? token.image : " ";
+    return token ? token.balance : " ";
   };
+
+  // const getTokenImage = (address: string) => {
+  //   const token = listToken.find((token) => token.address === address);
+  //   return token ? token.image : null;
+  // };
 
   const { data: hash, writeContract } = useWriteContract();
 
@@ -94,13 +157,13 @@ export default function CardSwap() {
 
   async function confirmSwap() {
     await writeContract({
-      address: TokenAddress,
+      address: tokenContract as `0x${string}`,
       abi: TokenABI,
       functionName: "approve",
-      args: [swapAddress, parseUnits(amount, 18)],
+      args: [swapContract, parseUnits(amount, 18)],
     });
     await writeContract({
-      address: swapAddress,
+      address: swapContract as `0x${string}`,
       abi: swapABI,
       functionName: "swap",
       args: [fromToken, toToken, parseUnits(amount, 18)],
@@ -123,20 +186,15 @@ export default function CardSwap() {
     }
   }, [isConfirmed]);
 
-  if (chainId === 57054)
-    return (
-      <p className="text-muted-foreground">
-        Swap on <strong className="text-primary">{chain?.name}</strong>{" "}
-        available soon
-      </p>
-    );
-
   return (
     <div className="max-w-md w-full">
       <div className="border rounded p-5 space-y-5">
         <section className="border p-3 grid xl:grid-cols-3 items-center gap-5">
           <div className="col-span-2">
             <p>Sell</p>
+            <p className="text-sm text-muted-foreground">
+              Balance: {String(getTokenBalance(fromToken))}
+            </p>
             <input
               placeholder="Amount"
               className="text-xl py-3 outline-none"
@@ -144,16 +202,7 @@ export default function CardSwap() {
               onChange={handleAmountChange}
             />
           </div>
-          <Button className="rounded">
-            <Image
-              src={getTokenImage(fromToken)}
-              alt="token swap idle"
-              width={35}
-              height={35}
-              priority={true}
-            />
-            {getTokenName(fromToken)}
-          </Button>
+          <Button className="rounded w-full">{getTokenName(fromToken)}</Button>
         </section>
 
         <div
@@ -166,28 +215,24 @@ export default function CardSwap() {
         <section className="border p-3 grid xl:grid-cols-3 items-center gap-5">
           <div className="col-span-2">
             <p>Buy</p>
-
+            <p className="text-sm text-muted-foreground">
+              Balance: {String(getTokenBalance(toToken))}
+            </p>
             <input
               className="text-xl py-3 outline-none"
               placeholder={isLoading ? "loading..." : ""}
               value={
                 resultCalculate
-                  ? (Number(resultCalculate) / 1e18).toLocaleString()
+                  ? formatUnits(
+                      BigInt(resultCalculate as unknown as string),
+                      18
+                    )
                   : ""
               }
               disabled
             />
           </div>
-          <Button className="rounded">
-            <Image
-              src={getTokenImage(toToken)}
-              alt="token swap idle"
-              width={35}
-              height={35}
-              priority={true}
-            />
-            {getTokenName(toToken)}
-          </Button>
+          <Button className="rounded"> {getTokenName(toToken)}</Button>
         </section>
         {isConnected ? (
           <Button
@@ -207,6 +252,7 @@ export default function CardSwap() {
             Connect Wallet
           </Button>
         )}
+        {isError && <p className="text-xs">{String(failureReason)}</p>}
       </div>
 
       <div className="flex flex-col items-center justify-center mt-5 gap-3">

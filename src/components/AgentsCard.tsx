@@ -83,7 +83,7 @@ export default function AgentsCard() {
           <strong>Connect Wallet</strong> to change others Network
         </p>
       )}
-      <div className="grid grid-cols-1 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
+      <div className="grid grid-cols-1 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
         {sortedTokens?.map((token: Token, index: number) => {
           return (
             <Link href={`/agents/${token.tokenAddress}`} key={index}>

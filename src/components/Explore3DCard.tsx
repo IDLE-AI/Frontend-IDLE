@@ -77,7 +77,6 @@ export function Explore3DCard() {
     address: FactoryTokenAddress,
     abi: FactoryTokenABI,
     functionName: "getAllTokens",
-    chainId: 3441006,
   }) as { data: Token[] };
 
   // Sort the tokens by createdAt in descending order

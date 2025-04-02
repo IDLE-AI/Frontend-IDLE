@@ -3,6 +3,8 @@ export const FactoryTokenAddressManta =
   "0x1EeD30A26C683e747e9661D71614bd1db5aD2111";
 export const FactoryTokenAddressSonic =
   "0xc960d83D8FD309CC8614A212EF653D6AD58bDaDA";
+export const FactoryTokenAddressEDUChainTestnet =
+  "0x77d951744e57Cc507770E5a232FecDC3358A2a5A";
 
 export const FactoryTokenABI = [
   {
