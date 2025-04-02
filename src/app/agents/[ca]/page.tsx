@@ -39,7 +39,7 @@ export default function Page() {
 
   const { data: AgentData } = useReadContract({
     address:
-      chainId === 3441006 ? FactoryTokenAddress : FactoryTokenAddressSonic,
+      chainId === 11155111 ? FactoryTokenAddress : FactoryTokenAddressSonic,
     abi: FactoryTokenABI,
     functionName: "getTokenByAddress",
     args: [ca],
