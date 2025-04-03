@@ -9,13 +9,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 export default function SwitchChain() {
   const { chains, switchChain } = useSwitchChain();
   const { chain } = useAccount();
 
   return (
-    <div className="flex gap-5 items-end justify-end">
+    <div className="flex items-center justify-between">
+      <DropdownMenu>
+        <DropdownMenuTrigger className="text-sm">
+          Free Testnet Faucet Token
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Available List Faucet</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {listFaucet?.map((list) => (
+            <Link href={list.link} target="_blank" key={list.name}>
+              <DropdownMenuItem>{list.name}</DropdownMenuItem>
+            </Link>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button size={"sm"} variant={"outline"} className="rounded">
@@ -38,3 +54,18 @@ export default function SwitchChain() {
     </div>
   );
 }
+
+const listFaucet = [
+  {
+    name: "Sepolia",
+    link: "https://cloud.google.com/application/web3/faucet/ethereum/sepolia",
+  },
+  {
+    name: "EDU Chain Testnet",
+    link: "https://www.hackquest.io/faucets/656476",
+  },
+  {
+    name: "Sonic Blaze Testnet",
+    link: "https://testnet.soniclabs.com/account",
+  },
+];
