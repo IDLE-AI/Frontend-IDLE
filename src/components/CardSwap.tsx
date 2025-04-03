@@ -26,10 +26,12 @@ import { ArrowDownUp, Wallet } from "lucide-react";
 import { formatUnits, parseUnits } from "viem";
 import { toast } from "sonner";
 import Link from "next/link";
+import SwitchChain from "./SwitchChain";
 // import Image from "next/image";
 
 export default function CardSwap() {
   const { isConnected, chainId, chain, address } = useAccount();
+  // const { chains, switchChain, chain } = useSwitchChain();
   const { connect } = useConnect();
 
   const { data: balanceNativeUser } = useBalance({
@@ -189,9 +191,15 @@ export default function CardSwap() {
   return (
     <div className="max-w-md w-full">
       <div className="border rounded p-5 space-y-5">
-        <section className="border p-3 grid xl:grid-cols-3 items-center gap-5">
+        {isConnected && <SwitchChain />}
+        {!isConnected && (
+          <p className="text-sm text-muted-foreground text-center">
+            <strong>Connect Wallet</strong> to change others Network
+          </p>
+        )}
+        <section className="border p-3 grid xl:grid-cols-3 items-center gap-5 rounded">
           <div className="col-span-2">
-            <p>Sell</p>
+            <p className="font-medium">Sell</p>
             <p className="text-sm text-muted-foreground">
               Balance: {String(getTokenBalance(fromToken))}
             </p>
@@ -212,9 +220,9 @@ export default function CardSwap() {
           <ArrowDownUp />
         </div>
 
-        <section className="border p-3 grid xl:grid-cols-3 items-center gap-5">
+        <section className="border p-3 grid xl:grid-cols-3 items-center gap-5 rounded">
           <div className="col-span-2">
-            <p>Buy</p>
+            <p className="font-medium">Buy</p>
             <p className="text-sm text-muted-foreground">
               Balance: {String(getTokenBalance(toToken))}
             </p>

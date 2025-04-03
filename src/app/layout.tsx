@@ -25,9 +25,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body className={`${inter.className} antialiased`}>
         <RainbowkitConfig>
-          <div className="flex items-center justify-center h-screen sm:hidden">
+          <div className="flex items-center justify-center h-screen xl:hidden">
             <p className="text-muted-foreground">
-              Please Open IDLE Website on Desktop
+              Please Open IDLE Website on Desktop/Laptop/PC
             </p>
           </div>
           <div className="hidden xl:block">
