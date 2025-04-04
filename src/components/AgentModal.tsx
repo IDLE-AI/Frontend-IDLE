@@ -110,7 +110,7 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
       try {
         setLoading(true);
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_DEPLOYMENT_URL}/api/chat`,
+          `https://frontend-idle.vercel.app/api/chat`,
           {
             method: "POST",
             headers: {
@@ -147,7 +147,7 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
   async function loadAgent() {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_DEPLOYMENT_URL}/api/agent`,
+        `https://frontend-idle.vercel.app/api/agent`,
         {
           method: "POST",
           headers: {

@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   const { message } = await request.json();
 
   try {
-    const response = await fetch(`http://localhost:8000/chat`, {
+    const response = await fetch(`http://127.0.0.1:8000/chat`, {
       method: "POST", // Missing method specification
       headers: {
         "Content-Type": "application/json", // Missing Content-Type header
