@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // First, make a POST request to the load endpoint
-    const response = await fetch(`http://127.0.0.1:8000/agents/${agent}/load`, {
+    const response = await fetch(` http://0.0.0.0:8000/agents/${agent}/load`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
