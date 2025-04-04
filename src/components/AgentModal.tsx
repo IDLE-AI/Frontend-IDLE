@@ -109,13 +109,16 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
 
       try {
         setLoading(true);
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message: input }),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_DEPLOYMENT_URL}/api/chat`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message: input }),
+          }
+        );
         const data = await response.json();
 
         if (response.ok) {
@@ -143,13 +146,16 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
 
   async function loadAgent() {
     try {
-      const response = await fetch("/api/agent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ agent: "idle ai" }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_DEPLOYMENT_URL}/api/agent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ agent: "idle ai" }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
