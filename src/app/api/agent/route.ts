@@ -2,17 +2,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { message } = await request.json();
+  const { agent } = await request.json();
 
   try {
-    const response = await fetch(`http://localhost:8000/chat`, {
-      method: "POST", // Missing method specification
+    // First, make a POST request to the load endpoint
+    const response = await fetch(`http://localhost:8000/agents/${agent}/load`, {
+      method: "POST",
       headers: {
-        "Content-Type": "application/json", // Missing Content-Type header
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        prompt: message,
-      }),
     });
 
     const data = await response.json(); // Parse the JSON response
@@ -21,7 +19,7 @@ export async function POST(request: NextRequest) {
       throw new Error(data.error || "Failed to generate response");
     }
 
-    return NextResponse.json({ content: data.response }); // Return the result property from the data
+    return NextResponse.json({ content: data.status }); // Return the result property from the data
   } catch (error) {
     console.error("AI error:", error);
     return NextResponse.json(

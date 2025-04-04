@@ -141,11 +141,32 @@ export default function AgentModal({ AgentData }: { AgentData: Token }) {
     }
   };
 
+  async function loadAgent() {
+    try {
+      const response = await fetch("/api/agent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ agent: "idle ai" }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Agent loaded successfully:", data);
+    } catch (error) {
+      console.error("Failed to load agent:", error);
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         {AgentData && isConnected && (
-          <Button className="rounded" variant={"secondary"}>
+          <Button className="rounded" variant={"secondary"} onClick={loadAgent}>
             Interact {AgentData.name}
           </Button>
         )}
