@@ -12,6 +12,7 @@ import { useAccount, useReadContract } from "wagmi";
 import {
   FactoryTokenABI,
   FactoryTokenAddress,
+  FactoryTokenAddressEDUChainTestnet,
   FactoryTokenAddressSonic,
 } from "@/contracts/FactoryToken";
 import Image from "next/image";
@@ -43,30 +44,42 @@ interface Token {
 }
 
 export default function AgentsCard() {
-  const { isDisconnected, chain } = useAccount();
+  const { isDisconnected, chain, chainId } = useAccount();
   // const chain = useChainId();
+  // const [tokenContract, setTokenContract] = React.useState<string>("");
+  const [FactoryTokenContract, setFactoryTokenContract] =
+    React.useState<string>("");
+
+  React.useEffect(() => {
+    if (chainId === 11155111 || chainId === 111_155_111) {
+      //sepolia
+      // setTokenContract(TokenAddress);
+      setFactoryTokenContract(FactoryTokenAddress);
+    } else if (chainId === 57054) {
+      // sonic blaze testnet
+      // setTokenContract(TokenAddressSonic);
+      setFactoryTokenContract(FactoryTokenAddressSonic);
+    } else if (chainId === 656476) {
+      //educhain testnet
+      // setTokenContract(TokenAddressEduChainTestnet);
+      setFactoryTokenContract(FactoryTokenAddressEDUChainTestnet);
+    }
+  }, [chainId]);
+
   // Specify the type of AgentData
   const { data: AgentData } = useReadContract({
-    address: FactoryTokenAddress,
+    address: FactoryTokenContract as `0x${string}`,
     abi: FactoryTokenABI,
     functionName: "getAllTokens",
     chainId: chain?.id,
   }) as { data: Token[] };
 
-  const { data: AgentDataSonic } = useReadContract({
-    address: FactoryTokenAddressSonic,
-    abi: FactoryTokenABI,
-    functionName: "getAllTokens",
-    chainId: chain?.id,
-  }) as { data: Token[] };
-
-  const mergedTokens = [...(AgentData || []), ...(AgentDataSonic || [])];
+  const mergedTokens = [...(AgentData || [])];
   const sortedTokens = mergedTokens.sort((a, b) => {
     return Number(b.createdAt) - Number(a.createdAt);
   });
 
   // const chainName = ChainConfig.chains.find((c) => c.id === chain)?.name;
-  console.log(chain);
   return (
     <section className="space-y-5">
       {/* <Select>
@@ -81,6 +94,11 @@ export default function AgentsCard() {
       {isDisconnected && (
         <p className="text-muted-foreground text-center">
           <strong>Connect Wallet</strong> to change others Network
+        </p>
+      )}
+      {!AgentData && (
+        <p className="text-muted-foreground text-center">
+          No tokens found on this network
         </p>
       )}
       <div className="grid grid-cols-1 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
@@ -99,7 +117,7 @@ export default function AgentsCard() {
                   />
                   {chain?.name && (
                     <Badge variant="outline">
-                      <Image
+                      {/* <Image
                         src={
                           chain.id === 3441006
                             ? "/images/manta.png"
@@ -110,7 +128,7 @@ export default function AgentsCard() {
                         alt={chain.name}
                         priority={true}
                         className="bg-primary rounded-full"
-                      />
+                      /> */}
                       <p className="text-xs font-light">{chain.name}</p>
                     </Badge>
                   )}

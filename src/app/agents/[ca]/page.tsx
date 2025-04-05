@@ -3,18 +3,18 @@ import React from "react";
 import Image from "next/image";
 import BuySell from "@/components/BuySell";
 import Transactions from "./Transactions";
-import { useAccount, useChainId, useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { useParams } from "next/navigation";
 import {
   FactoryTokenABI,
   FactoryTokenAddress,
+  FactoryTokenAddressEDUChainTestnet,
   FactoryTokenAddressSonic,
 } from "@/contracts/FactoryToken";
 import moment from "moment";
 import AgentModal from "@/components/AgentModal";
 import { BondingProggress } from "@/components/BondingProggress";
 import { toast } from "sonner";
-import { ChainConfig } from "@/config/RainbowkitConfig";
 
 interface Token {
   name: string;
@@ -32,18 +32,37 @@ interface Token {
 
 export default function Page() {
   const { ca } = useParams();
-  const { isConnected } = useAccount();
-  const chain = useChainId();
-  const chainId = ChainConfig.chains.find((c) => c.id === chain)?.id;
-  const chainName = ChainConfig.chains.find((c) => c.id === chain)?.name;
+  const { isConnected, chainId, chain } = useAccount();
+  // const chain = useChainId();
+  // const chainId = ChainConfig.chains.find((c) => c.id === chain)?.id;
+  const chainName = chain?.name;
 
-  const { data: AgentData } = useReadContract({
-    address:
-      chainId === 11155111 ? FactoryTokenAddress : FactoryTokenAddressSonic,
+  // const [tokenContract, setTokenContract] = React.useState<string>("");
+  const [FactoryTokenContract, setFactoryTokenContract] =
+    React.useState<string>("");
+
+  React.useEffect(() => {
+    if (chainId === 11155111 || chainId === 111_155_111) {
+      //sepolia
+      // setTokenContract(TokenAddress);
+      setFactoryTokenContract(FactoryTokenAddress);
+    } else if (chainId === 57054) {
+      // sonic blaze testnet
+      // setTokenContract(TokenAddressSonic);
+      setFactoryTokenContract(FactoryTokenAddressSonic);
+    } else if (chainId === 656476) {
+      //educhain testnet
+      // setTokenContract(TokenAddressEduChainTestnet);
+      setFactoryTokenContract(FactoryTokenAddressEDUChainTestnet);
+    }
+  }, [chainId]);
+
+  const { data: AgentData, isLoading } = useReadContract({
+    address: FactoryTokenContract as `0x${string}`,
     abi: FactoryTokenABI,
     functionName: "getTokenByAddress",
     args: [ca],
-  }) as { data: Token };
+  }) as { data: Token; isLoading: boolean };
 
   const copyTextToClipboard = () => {
     if (!navigator.clipboard) {
@@ -65,21 +84,32 @@ export default function Page() {
         });
       });
   };
-
-  if (AgentData?.owner === "0x0000000000000000000000000000000000000000") {
+  if (
+    !AgentData ||
+    AgentData.owner === "0x0000000000000000000000000000000000000000"
+  ) {
     return (
       <div className="h-[calc(100vh-20vh)] flex flex-col items-center justify-center gap-5">
         <div className="text-center">
-          <h1 className="text-3xl font-semibold">Change Others Network</h1>
+          <h1 className="text-3xl font-semibold">
+            Switch to a Supported Network
+          </h1>
           <p className="text-gray-400 font-light">
-            you are in <strong>{chainName}</strong> Network
+            You are currently connected to the{" "}
+            <strong>{chainName || "unknown"}</strong> network.
           </p>
         </div>
       </div>
     );
   }
 
-  console.log(AgentData);
+  if (isLoading) {
+    return (
+      <div className="h-[calc(100vh-20vh)] flex items-center justify-center">
+        <p className="text-center text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <main className="xl:m-5 space-y-5 xl:mx-10 2xl:mx-40">

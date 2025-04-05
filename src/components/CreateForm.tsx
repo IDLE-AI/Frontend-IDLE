@@ -80,6 +80,8 @@ export default function CreateForm() {
     isPending,
     writeContract,
     isSuccess,
+    isError,
+    failureReason,
   } = useWriteContract();
 
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
@@ -87,11 +89,11 @@ export default function CreateForm() {
   const handleSubmit = async (values: valuesForm) => {
     try {
       await writeContract({
-        address: TokenAddress,
+        address: tokenContract as `0x${string}`,
         abi: TokenABI,
         functionName: "approve",
         args: [
-          FactoryTokenContract,
+          FactoryTokenContract as `0x${string}`,
           parseUnits(values.paymentAmount.toString(), 18),
         ],
       });
@@ -482,6 +484,13 @@ export default function CreateForm() {
       </section>
 
       <section className="flex flex-col items-center justify-center space-y-5">
+        <div className="grid grid-cols-1 line-clamp-1">
+          {isError && (
+            <p className="text-sm text-red-500 text-center">
+              Transaction failed: {String(failureReason)}
+            </p>
+          )}
+        </div>
         {isConfirming && (
           <p className="text-sm text-muted-foreground text-center">
             Creating your AI AGENT...

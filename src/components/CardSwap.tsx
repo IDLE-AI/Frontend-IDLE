@@ -25,7 +25,6 @@ import {
 import { ArrowDownUp, Wallet } from "lucide-react";
 import { formatUnits, parseUnits } from "viem";
 import { toast } from "sonner";
-import Link from "next/link";
 import SwitchChain from "./SwitchChain";
 // import Image from "next/image";
 
@@ -72,6 +71,7 @@ export default function CardSwap() {
         name: chain?.nativeCurrency.symbol || "ETH",
         image: "",
         balance: balanceNativeUser ? balanceNativeUser?.formatted : "0",
+        price: 0,
       },
       {
         address: tokenContract as `0x${string}`,
@@ -115,6 +115,21 @@ export default function CardSwap() {
     chainId: chainId,
     args: [fromToken, toToken, parseUnits(amount, 18)],
   });
+
+  const { data: getEthBalance } = useReadContract({
+    address: swapContract as `0x${string}`,
+    abi: swapABI,
+    functionName: "ethBalance",
+    chainId: chainId,
+  });
+
+  const { data: getIdleBalance } = useReadContract({
+    address: swapContract as `0x${string}`,
+    abi: swapABI,
+    functionName: "tokenBalances",
+    chainId: chainId,
+    args: [tokenContract as `0x${string}`],
+  });
   // Debounced function
   const debouncedFetchSwap = React.useCallback(() => {
     setTimeout(() => {
@@ -150,7 +165,13 @@ export default function CardSwap() {
   //   return token ? token.image : null;
   // };
 
-  const { data: hash, writeContract } = useWriteContract();
+  const {
+    data: hash,
+    writeContract,
+    isSuccess,
+    isError: swapError,
+    failureReason: swapFailureReason,
+  } = useWriteContract();
 
   // const isSwapToken =
   //   fromToken === TokenAddress
@@ -187,6 +208,62 @@ export default function CardSwap() {
       );
     }
   }, [isConfirmed]);
+
+  const insufficientFunds = React.useMemo(() => {
+    if (fromToken === listToken[0].address) {
+      return Number(amount) > Number(listToken[0].balance);
+    }
+    if (fromToken === listToken[1].address) {
+      return Number(amount) > Number(listToken[1].balance);
+    }
+    return false;
+  }, [amount, fromToken, listToken]);
+
+  React.useEffect(() => {
+    if (insufficientFunds) {
+      toast.error("Insufficient funds for this transaction.");
+    }
+  }, [insufficientFunds]);
+  // Data input
+  const ethBalance = getEthBalance;
+  const tokenBalanceA = getIdleBalance;
+  const [ethPriceInUSD, setEthPriceInUSD] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    async function fetchEthPrice() {
+      try {
+        const response = await fetch(
+          "https://api.g.alchemy.com/prices/v1/uXnyCu-59hxPNS-5USSebL3eum_qHs_p/tokens/by-symbol?symbols=ETH",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        // Assuming the price is in the last data point of the chart
+        const price = parseFloat(data?.data?.[0]?.prices?.[0]?.value);
+        setEthPriceInUSD(price);
+      } catch (error) {
+        console.error("Failed to fetch ETH price:", error);
+      }
+    }
+
+    fetchEthPrice();
+  }, []); // Konversi ethBalance ke Ether
+  const ethBalanceInEther: number = Number(ethBalance) / 1e18;
+
+  // Menghitung harga token dalam ETH
+  const priceInETH: number = ethBalanceInEther / Number(tokenBalanceA);
+
+  // Menghitung harga token dalam USD
+  const priceInUSD: number = priceInETH * ethPriceInUSD || 0;
+
+  // Menghitung market cap dalam ETH
+  const marketCapInETH: number = ethBalanceInEther;
+
+  // Menghitung market cap dalam USD
+  const marketCapInUSD: number = marketCapInETH * ethPriceInUSD || 0;
 
   return (
     <div className="max-w-md w-full">
@@ -242,13 +319,49 @@ export default function CardSwap() {
           </div>
           <Button className="rounded"> {getTokenName(toToken)}</Button>
         </section>
+        <div className="space-y-1 text-sm text-muted-foreground">
+          <p>
+            ETH Price:{" "}
+            <span className="text-primary">
+              {" "}
+              {ethPriceInUSD.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </span>
+          </p>
+          <p>
+            IDLE Price ({chain?.name}):{" "}
+            <span className="text-primary">${priceInUSD.toFixed(25)}</span>
+          </p>
+          <p>
+            MarketCap:{" "}
+            <span className="text-primary">
+              {" "}
+              {marketCapInUSD.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </span>
+          </p>
+        </div>
         {isConnected ? (
           <Button
             className="w-full rounded"
             onClick={confirmSwap}
-            disabled={isConfirming || amount === "" || isLoading}
+            disabled={
+              isConfirming || amount === "" || isLoading || insufficientFunds
+            }
           >
-            {isConfirming ? "Confirming Swap..." : "Swap"}
+            {isConfirming ? (
+              "Confirming Swap..."
+            ) : insufficientFunds ? (
+              <p className="text-sm text-red-500">
+                Insufficient Balance {getTokenName(fromToken)}
+              </p>
+            ) : (
+              "Swap"
+            )}
           </Button>
         ) : (
           <Button
@@ -264,21 +377,21 @@ export default function CardSwap() {
       </div>
 
       <div className="flex flex-col items-center justify-center mt-5 gap-3">
-        {isConfirmed && (
-          <p>
+        {swapError && (
+          <p className="text-xs text-red-500 text-center line-clamp-2 max-w-sm">
+            {String(swapFailureReason)}
+          </p>
+        )}
+        {isConfirmed && isSuccess && (
+          <p className="text-sm text-green-500">
             Succesfully swap token from {getTokenName(fromToken)} to{" "}
             {getTokenName(toToken)}
           </p>
         )}
         {isConfirmed && (
-          <Button asChild className="rounded" variant={"outline"}>
-            <Link
-              href={`https://sepolia.etherscan.io/tx/${hash}`}
-              target="_blank"
-            >
-              View Transaction Sepolia Explorer
-            </Link>
-          </Button>
+          <p className="text-center text-sm text-muted-foreground">
+            Transaction Hash: {hash}
+          </p>
         )}
       </div>
     </div>
