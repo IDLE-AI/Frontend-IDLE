@@ -1,42 +1,26 @@
-export const FactoryTokenAddress = "0xd764651471F9C2e98153989D3CF9B210aef7bB9a";
+export const FactoryTokenAddress = "0xC6Ed35c1577029d7888259CC3FFAA13071156537";
 export const FactoryTokenAddressManta =
   "0x1EeD30A26C683e747e9661D71614bd1db5aD2111";
 export const FactoryTokenAddressSonic =
-  "0xc960d83D8FD309CC8614A212EF653D6AD58bDaDA";
+  "0x05b9D08a2EBE670B506c667886e338187F7e1efa";
 export const FactoryTokenAddressEDUChainTestnet =
-  "0x77d951744e57Cc507770E5a232FecDC3358A2a5A";
+  "0x608a23Fab08dE9f305A574C5b7C9E8BD694709e4";
 
 export const FactoryTokenABI = [
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_idleTokenAddress",
-        type: "address",
-      },
+      { internalType: "address", name: "_idleTokenAddress", type: "address" },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "owner", type: "address" }],
     name: "OwnableInvalidOwner",
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
     name: "OwnableUnauthorizedAccount",
     type: "error",
   },
@@ -74,12 +58,7 @@ export const FactoryTokenABI = [
         name: "tokenAddress",
         type: "address",
       },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
+      { indexed: false, internalType: "string", name: "name", type: "string" },
       {
         indexed: false,
         internalType: "string",
@@ -123,64 +102,25 @@ export const FactoryTokenABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_tokenAddress",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
+      { internalType: "address", name: "fromToken", type: "address" },
+      { internalType: "address", name: "toToken", type: "address" },
+      { internalType: "uint256", name: "amountIn", type: "uint256" },
     ],
-    name: "buyTokens",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "calculateSwap",
+    outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "string",
-        name: "_name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_ticker",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_iconURL",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_description",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_Twitter",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_Website",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_Behavior",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_paymentAmount",
-        type: "uint256",
-      },
+      { internalType: "string", name: "_name", type: "string" },
+      { internalType: "string", name: "_ticker", type: "string" },
+      { internalType: "string", name: "_iconURL", type: "string" },
+      { internalType: "string", name: "_description", type: "string" },
+      { internalType: "string", name: "_Twitter", type: "string" },
+      { internalType: "string", name: "_Website", type: "string" },
+      { internalType: "string", name: "_Behavior", type: "string" },
+      { internalType: "uint256", name: "_paymentAmount", type: "uint256" },
     ],
     name: "createTokenWithPayment",
     outputs: [],
@@ -193,61 +133,17 @@ export const FactoryTokenABI = [
     outputs: [
       {
         components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "ticker",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "iconURL",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "description",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Twitter",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Website",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Behavior",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "createdAt",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "totalSupply",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "tokenAddress",
-            type: "address",
-          },
+          { internalType: "string", name: "name", type: "string" },
+          { internalType: "string", name: "ticker", type: "string" },
+          { internalType: "string", name: "iconURL", type: "string" },
+          { internalType: "string", name: "description", type: "string" },
+          { internalType: "string", name: "Twitter", type: "string" },
+          { internalType: "string", name: "Website", type: "string" },
+          { internalType: "string", name: "Behavior", type: "string" },
+          { internalType: "uint256", name: "createdAt", type: "uint256" },
+          { internalType: "address", name: "owner", type: "address" },
+          { internalType: "uint256", name: "totalSupply", type: "uint256" },
+          { internalType: "address", name: "tokenAddress", type: "address" },
         ],
         internalType: "struct FactoryToken.TokenInfo[]",
         name: "",
@@ -259,71 +155,23 @@ export const FactoryTokenABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_tokenAddress",
-        type: "address",
-      },
+      { internalType: "address", name: "_tokenAddress", type: "address" },
     ],
     name: "getTokenByAddress",
     outputs: [
       {
         components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "ticker",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "iconURL",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "description",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Twitter",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Website",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Behavior",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "createdAt",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "totalSupply",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "tokenAddress",
-            type: "address",
-          },
+          { internalType: "string", name: "name", type: "string" },
+          { internalType: "string", name: "ticker", type: "string" },
+          { internalType: "string", name: "iconURL", type: "string" },
+          { internalType: "string", name: "description", type: "string" },
+          { internalType: "string", name: "Twitter", type: "string" },
+          { internalType: "string", name: "Website", type: "string" },
+          { internalType: "string", name: "Behavior", type: "string" },
+          { internalType: "uint256", name: "createdAt", type: "uint256" },
+          { internalType: "address", name: "owner", type: "address" },
+          { internalType: "uint256", name: "totalSupply", type: "uint256" },
+          { internalType: "address", name: "tokenAddress", type: "address" },
         ],
         internalType: "struct FactoryToken.TokenInfo",
         name: "",
@@ -334,72 +182,22 @@ export const FactoryTokenABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_index",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_index", type: "uint256" }],
     name: "getTokenByIndex",
     outputs: [
       {
         components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "ticker",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "iconURL",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "description",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Twitter",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Website",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "Behavior",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "createdAt",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "totalSupply",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "tokenAddress",
-            type: "address",
-          },
+          { internalType: "string", name: "name", type: "string" },
+          { internalType: "string", name: "ticker", type: "string" },
+          { internalType: "string", name: "iconURL", type: "string" },
+          { internalType: "string", name: "description", type: "string" },
+          { internalType: "string", name: "Twitter", type: "string" },
+          { internalType: "string", name: "Website", type: "string" },
+          { internalType: "string", name: "Behavior", type: "string" },
+          { internalType: "uint256", name: "createdAt", type: "uint256" },
+          { internalType: "address", name: "owner", type: "address" },
+          { internalType: "uint256", name: "totalSupply", type: "uint256" },
+          { internalType: "address", name: "tokenAddress", type: "address" },
         ],
         internalType: "struct FactoryToken.TokenInfo",
         name: "",
@@ -412,26 +210,14 @@ export const FactoryTokenABI = [
   {
     inputs: [],
     name: "idleToken",
-    outputs: [
-      {
-        internalType: "contract IERC20",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
@@ -444,150 +230,55 @@ export const FactoryTokenABI = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+      { internalType: "address", name: "fromToken", type: "address" },
+      { internalType: "address", name: "toToken", type: "address" },
+      { internalType: "uint256", name: "amountIn", type: "uint256" },
     ],
+    name: "swapToken",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
     name: "tokenDetails",
     outputs: [
-      {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "ticker",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "iconURL",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "description",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "Twitter",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "Website",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "Behavior",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "createdAt",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "totalSupply",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "tokenAddress",
-        type: "address",
-      },
+      { internalType: "string", name: "name", type: "string" },
+      { internalType: "string", name: "ticker", type: "string" },
+      { internalType: "string", name: "iconURL", type: "string" },
+      { internalType: "string", name: "description", type: "string" },
+      { internalType: "string", name: "Twitter", type: "string" },
+      { internalType: "string", name: "Website", type: "string" },
+      { internalType: "string", name: "Behavior", type: "string" },
+      { internalType: "uint256", name: "createdAt", type: "uint256" },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "uint256", name: "totalSupply", type: "uint256" },
+      { internalType: "address", name: "tokenAddress", type: "address" },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "tokens",
     outputs: [
-      {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "ticker",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "iconURL",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "description",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "Twitter",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "Website",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "Behavior",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "createdAt",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "totalSupply",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "tokenAddress",
-        type: "address",
-      },
+      { internalType: "string", name: "name", type: "string" },
+      { internalType: "string", name: "ticker", type: "string" },
+      { internalType: "string", name: "iconURL", type: "string" },
+      { internalType: "string", name: "description", type: "string" },
+      { internalType: "string", name: "Twitter", type: "string" },
+      { internalType: "string", name: "Website", type: "string" },
+      { internalType: "string", name: "Behavior", type: "string" },
+      { internalType: "uint256", name: "createdAt", type: "uint256" },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "uint256", name: "totalSupply", type: "uint256" },
+      { internalType: "address", name: "tokenAddress", type: "address" },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
