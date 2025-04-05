@@ -84,10 +84,7 @@ export default function Page() {
         });
       });
   };
-  if (
-    !AgentData ||
-    AgentData.owner === "0x0000000000000000000000000000000000000000"
-  ) {
+  if (AgentData?.owner === "0x0000000000000000000000000000000000000000") {
     return (
       <div className="h-[calc(100vh-20vh)] flex flex-col items-center justify-center gap-5">
         <div className="text-center">
