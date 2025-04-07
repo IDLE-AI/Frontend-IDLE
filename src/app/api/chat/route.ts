@@ -5,15 +5,18 @@ export async function POST(request: NextRequest) {
   const { message } = await request.json();
 
   try {
-    const response = await fetch(`http://localhost:8000/chat`, {
-      method: "POST", // Missing method specification
-      headers: {
-        "Content-Type": "application/json", // Missing Content-Type header
-      },
-      body: JSON.stringify({
-        prompt: message,
-      }),
-    });
+    const response = await fetch(
+      `https://9baa-2404-8000-1048-6bc-2124-f4cb-b351-fc92.ngrok-free.app/chat`,
+      {
+        method: "POST", // Missing method specification
+        headers: {
+          "Content-Type": "application/json", // Missing Content-Type header
+        },
+        body: JSON.stringify({
+          prompt: message,
+        }),
+      }
+    );
 
     const data = await response.json(); // Parse the JSON response
 

@@ -6,12 +6,15 @@ export async function POST(request: NextRequest) {
 
   try {
     // First, make a POST request to the load endpoint
-    const response = await fetch(`http://localhost:8000/agents/${agent}/load`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `https://9baa-2404-8000-1048-6bc-2124-f4cb-b351-fc92.ngrok-free.app/agents/${agent}/load`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const data = await response.json(); // Parse the JSON response
 

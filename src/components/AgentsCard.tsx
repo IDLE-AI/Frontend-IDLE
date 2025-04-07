@@ -27,6 +27,7 @@ import moment from "moment";
 // } from "@/components/ui/select";
 // import { ChainConfig } from "@/config/RainbowkitConfig";
 import { Badge } from "@/components/ui/badge";
+import { LoaderCircle } from "lucide-react";
 
 // Define the Token interface
 interface Token {
@@ -48,7 +49,7 @@ export default function AgentsCard() {
   // const chain = useChainId();
   // const [tokenContract, setTokenContract] = React.useState<string>("");
   const [FactoryTokenContract, setFactoryTokenContract] =
-    React.useState<string>("");
+    React.useState<string>(FactoryTokenAddress);
 
   React.useEffect(() => {
     if (chainId === 11155111 || chainId === 111_155_111) {
@@ -67,12 +68,12 @@ export default function AgentsCard() {
   }, [chainId]);
 
   // Specify the type of AgentData
-  const { data: AgentData } = useReadContract({
+  const { data: AgentData, isLoading } = useReadContract({
     address: FactoryTokenContract as `0x${string}`,
     abi: FactoryTokenABI,
     functionName: "getAllTokens",
     chainId: chain?.id,
-  }) as { data: Token[] };
+  }) as { data: Token[]; isLoading: boolean };
 
   const mergedTokens = [...(AgentData || [])];
   const sortedTokens = mergedTokens.sort((a, b) => {
@@ -91,14 +92,14 @@ export default function AgentsCard() {
           <SelectItem value="dark">Market Cap</SelectItem>
         </SelectContent>
       </Select> */}
-      {isDisconnected && (
+      {isDisconnected && !isLoading && (
         <p className="text-muted-foreground text-center">
           <strong>Connect Wallet</strong> to change others Network
         </p>
       )}
-      {!AgentData && (
-        <p className="text-muted-foreground text-center">
-          No tokens found on this network
+      {isLoading && (
+        <p className="text-muted-foreground text-center flex items-center justify-center gap-2">
+          Loading Agents <LoaderCircle className="animate-spin" />
         </p>
       )}
       <div className="grid grid-cols-1 xl:grid-cols-3 2xl:grid-cols-4 gap-5">

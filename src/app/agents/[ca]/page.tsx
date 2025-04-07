@@ -15,6 +15,7 @@ import moment from "moment";
 import AgentModal from "@/components/AgentModal";
 import { BondingProggress } from "@/components/BondingProggress";
 import { toast } from "sonner";
+import { LoaderCircle } from "lucide-react";
 
 interface Token {
   name: string;
@@ -84,7 +85,10 @@ export default function Page() {
         });
       });
   };
-  if (AgentData?.owner === "0x0000000000000000000000000000000000000000") {
+  if (
+    AgentData?.owner === "0x0000000000000000000000000000000000000000" &&
+    !isLoading
+  ) {
     return (
       <div className="h-[calc(100vh-20vh)] flex flex-col items-center justify-center gap-5">
         <div className="text-center">
@@ -102,8 +106,11 @@ export default function Page() {
 
   if (isLoading) {
     return (
-      <div className="h-[calc(100vh-20vh)] flex items-center justify-center">
-        <p className="text-center text-muted-foreground">Loading...</p>
+      <div className="h-[calc(100vh-20vh)] flex items-center justify-center gap-2">
+        <p className="text-center text-muted-foreground">
+          Loading Detail Agentss
+        </p>
+        <LoaderCircle className="animate-spin" />
       </div>
     );
   }
